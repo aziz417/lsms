@@ -23,7 +23,7 @@ export default function Header() {
 
                 {parameters?.map((parameter, index) => (
                     <>
-                        <span className='nav-link custom-nav-link'>{">"}</span>
+                        <span className='nav-link custom-nav-link'>{parameters.length == index+1 ? ">" : ''}</span>
                         <li className="nav-item">
                             <Link className="nav-link custom-nav-link" href={parameters.length == index+1 ? "#" : "/"+parameter} role="button">{ucFirst(parameter)}</Link>
                         </li>
