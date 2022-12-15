@@ -36,7 +36,7 @@ export default function Index() {
                             data-toggle="dropdown" aria-expanded="false">
                             Per Page: <span>10</span>
                           </button>
-                          <ul className="dropdown-menu" style={{}}>
+                          <ul className="dropdown-menu">
                             <li className="dropdown-item">10</li>
                             <li className="dropdown-item">20</li>
                             <li className="dropdown-item">40</li>
@@ -64,7 +64,7 @@ export default function Index() {
                   <table className="table table-striped">
                     <thead>
                       <tr>
-                        <th style={{ width: 10 }}>#</th>
+                        <th>#</th>
                         <th>Name</th>
                         {/* <th>Image</th> */}
                         <th>Phone</th>
@@ -130,7 +130,7 @@ export default function Index() {
                     <table className="table table-striped">
                       <thead>
                         <tr>
-                          <th style={{ width: 10 }}>#</th>
+                          <th>#</th>
                           <th>Name</th>
                           <th>Image</th>
                           <th>Phone</th>

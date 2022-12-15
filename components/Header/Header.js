@@ -2,40 +2,27 @@ import React, { useState } from 'react';
 import Link from 'next/link'
 import { useRouter } from 'next/router';
 import { capitalizeFirst, convertToSlug, ucFirst } from "../../halpers/helper"
+import Breadcrumb from '../Breadcrumb/Breadcrumb.js';
 
 
 export default function Header() {
     const router = useRouter();
-
+  
     const parameters = router.asPath.split("/").slice(1)
-
 
     return (
         <nav className="main-header navbar navbar-expand navbar-white navbar-light">
             {/* Left navbar links */}
-            <ul className="navbar-nav">
-                <li className="nav-item">
+
+            <ol className="breadcrumb breadcrumb-customStyle  float-sm-right">
+                <li className="breadcrumb-item">
                     <a className="nav-link" data-widget="pushmenu" href="#" role="button"><i className="fas fa-bars" /></a>
                 </li>
-                <li className="nav-item">
-                    <a className="nav-link custom-nav-link" href="#" role="button">Home</a>
-                </li>
+            
 
-                {parameters?.map((parameter, index) => (
-                    <>
-                        <span className='nav-link custom-nav-link'>{parameters.length == index+1 ? ">" : ''}</span>
-                        <li className="nav-item">
-                            <Link className="nav-link custom-nav-link" href={parameters.length == index+1 ? "#" : "/"+parameter} role="button">{ucFirst(parameter)}</Link>
-                        </li>
-                    </>
-                ))}
+                <Breadcrumb parameters={parameters} />
+            </ol>
 
-            </ul>
-            {/* <div className="col-sm-6">
-                <ol className="breadcrumb">
-
-                </ol>
-            </div> */}
             {/* Right navbar links */}
             <ul className="navbar-nav ml-auto">
 
@@ -90,7 +77,7 @@ export default function Header() {
                         </a>
                         <div className="dropdown-divider" />
                         <a href="#" className="dropdown-item">
-                            <i class="far fa-sign-out"></i>
+                            <i className="far fa-sign-out"></i>
                             <i className="fa fa-sign-out mr-2" /> Logout
                         </a>
                     </div>

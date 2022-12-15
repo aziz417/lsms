@@ -1,21 +1,24 @@
 import Link from 'next/link'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image'
 
 export default function Sidebar() {
+
     const mediaSidebarControl = () => {
         const el = document.querySelector('body').classList;
         el.remove("sidebar-open");
-        el.add(["sidebar-closed"  , "sidebar-collapse"]);
+        el.add(["sidebar-closed", "sidebar-collapse"]);
     }
+
     return (
         <div>
-            <aside id='sidebarManage' className="main-sidebar sidebar-dark-primary elevation-4">
-            <button onClick={mediaSidebarControl} id='sideBarhideBtn' className='float-right btn btn-danger'>X</button>
+            <aside  id='sidebarManage' className="main-sidebar sidebar-dark-primary elevation-4">
+                <button onClick={mediaSidebarControl} id='sideBarhideBtn' className='float-right btn btn-danger'>X</button>
 
                 {/* Brand Logo */}
                 <Link href="/" className="brand-link sidebar-logo-section">
-                    <div className="brand-image img-circle elevation-3">
+                    <div className="brand-image img-circle el
+                    evation-3">
                         <Image
                             src="/dist/img/AdminLTELogo.png"
                             alt="Logo"
@@ -31,7 +34,7 @@ export default function Sidebar() {
                     {/* Sidebar user panel (optional) */}
                     <div className="user-panel mt-3 pb-3 mb-3 d-flex">
                         <div className="image">
-                            <div  className="img-circle elevation-2 sidebar-user-image">
+                            <div className="img-circle elevation-2 sidebar-user-image">
                                 <Image
                                     src="/dist/img/user2-160x160.jpg"
                                     alt="Logo"
@@ -54,7 +57,7 @@ export default function Sidebar() {
                                     Dashboard
                                 </Link>
                             </li>
-
+                        
                             <li className="nav-item menu-open">
                                 <a href="#" className="nav-link">
                                     <i className="nav-icon fa fa-users" />
@@ -78,6 +81,7 @@ export default function Sidebar() {
                                     </li>
                                 </ul>
                             </li>
+                            <li style={{height: "30px"}}></li>
 
                         </ul>
                     </nav>

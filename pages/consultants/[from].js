@@ -67,13 +67,7 @@ export default function From() {
                                     <h1>Consultant Create</h1>
                                 </div>
 
-                                <div className="col-sm-6">
-                                    <ol className="breadcrumb float-sm-right">
-                                        <li className="breadcrumb-item"><Link href="/">Home</Link></li>
-                                        <li className="breadcrumb-item">Consultant</li>
-                                        <li className="breadcrumb-item active">Create</li>
-                                    </ol>
-                                </div>
+                                
                             </div>
 
                             <div className="card card-primary">
@@ -88,7 +82,7 @@ export default function From() {
                                             help="max 11 characters"
                                             type="text"
                                             placeholder="Enter Your Name"
-                                            required="true"
+                                            required={true}
                                             maxL="11"
                                             minL="3"
                                             
@@ -98,7 +92,7 @@ export default function From() {
                                             label="Email"
                                             name="email"
                                             help="must be contain @"
-                                            required="false"
+                                            required={false}
                                             type="email"
                                             placeholder="Enter Your Email"
                                         />
@@ -107,7 +101,7 @@ export default function From() {
                                             label="Password"
                                             name="password"
                                             help="password must be contain 8"
-                                            required="false"
+                                            required={false}
                                             type="password"
                                             placeholder="Enter Your Password"
                                         />
@@ -129,7 +123,7 @@ export default function From() {
                                             value="true"
                                             label="status"
                                             help="please seletct"
-                                            required="true"
+                                            required={true}
                                         />
 
                                         <Radio

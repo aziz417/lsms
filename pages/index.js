@@ -29,7 +29,7 @@ export default function Index() {
                 {/* small box */}
                 <div className="small-box bg-success">
                   <div className="inner">
-                    <h3>53<sup style={{ fontSize: 20 }}>%</sup></h3>
+                    <h3>53<sup style={{ fontSize: '20px' }}>%</sup></h3>
                     <p>Bounce Rate</p>
                   </div>
                   <div className="icon">
