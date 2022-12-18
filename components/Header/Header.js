@@ -11,7 +11,7 @@ export default function Header() {
     const parameters = router.asPath.split("/").slice(1)
 
     return (
-        <nav className="main-header navbar navbar-expand navbar-white navbar-light">
+        <nav className="main-header navbar mb-2 navbar-expand navbar-white navbar-light">
             {/* Left navbar links */}
 
             <ol className="breadcrumb breadcrumb-customStyle  float-sm-right">

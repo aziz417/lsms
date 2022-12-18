@@ -58,7 +58,7 @@ export default function Sidebar() {
                                 </Link>
                             </li>
                         
-                            <li className="nav-item menu-open">
+                            <li className="nav-item">
                                 <a href="#" className="nav-link">
                                     <i className="nav-icon fa fa-users" />
                                     <p>

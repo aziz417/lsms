@@ -11,6 +11,24 @@ a {
   text-decoration: none;
 }
 
+@media screen and (min-width: 768px) {
+  .fs-md {
+    font-size: 25px;
+  }
+}
+
+@media screen and (min-width: 425px) {
+  .fs-sm {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .fs-xs {
+    font-size: 15px;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -33,22 +51,46 @@ a {
 }
 
 .image-with-100x100 {
-  with: 100px;
+  width: 100px;
   height: 100px
+  
 }
-#sidebarManage{
+
+#sidebarManage {
   position: fixed !important;
   height: -webkit-fill-available !important;
 }
+
 .custom-nav-link {
   padding: 8px 2px !important;
   font-weight: bold;
 }
-.breadcrumb-customStyle{
+
+.breadcrumb-item+.breadcrumb-item::before {
+  float: left;
+  padding-right: 5px;
+  color: #000;
+  font-size: 20px;
+  font-weight: bolder;
+  content: ">";
+}
+
+@media screen and (max-width: 425px) {
+  .breadcumb-show-hide {
+    display: flex !important;
+  }
+}
+
+.breadcrumb-customStyle {
   margin-bottom: 0px !important;
   padding: 0px !important;
   background: none;
 }
+
+.breadcumb-show-hide {
+  display: none;
+}
+
 .breadcumb-home-item::before {
   float: left;
   padding-right: 0.5rem;
@@ -62,7 +104,7 @@ a {
   }
 }
 
-.breadcumb-item-response-manage{
+.breadcumb-item-response-manage {
   justify-content: center;
   display: flex;
 }
@@ -73,8 +115,9 @@ a {
   }
 }
 
+
 @media screen and (max-width: 425px) {
-  .breadcumb-item-response-mobile-manage{
+  .breadcumb-item-response-mobile-manage {
     width: 300px;
     background: #ccc;
     justify-content: start;
@@ -83,14 +126,16 @@ a {
 
 
 
-  .breadcumb-item-response-mobile-none{
+  .breadcumb-item-response-mobile-none {
     display: none;
   }
 
-  .breadcumb-item-response-mobile-show{
+  .breadcumb-item-response-mobile-show {
     display: flex !important;
   }
 }
+
+
 
 @media (prefers-color-scheme: dark) {
   html {
@@ -101,4 +146,38 @@ a {
     color: white;
     background: black;
   }
+}
+
+/* multiple image preview  */
+.multiple-image-priview-section {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+}
+
+.multiple-image-priview-item {
+  position: relative;
+}
+
+.multiple-image-priview-item-remove-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 0px 6px;
+  background: red;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 12px;
+
+}
+
+.multiple-image-priview-item-count {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: rgb(33, 44, 207);
+  color: #fff;
+  border-radius: 10px;
+  padding: 0px 6px;
+  font-size: 12px;
 }

@@ -7,6 +7,7 @@ import Select from '../../components/FormControl/Select.js';
 import Checkbox from '../../components/FormControl/Checkbox.js';
 import Radio from '../../components/FormControl/Radio.js';
 import ImageUpload from '../../components/FormControl/ImageUpload.js';
+import MultipleImageUpload from '../../components/FormControl/MultipleImageUpload.js';
 
 export default function From() {
 
@@ -34,6 +35,12 @@ export default function From() {
         // console.log(e.target.value);
     }
 
+    const multipleProfileUpload = (e) => {
+        console.log(e);
+        // console.log(e.target.checked);
+        // console.log(e.target.value);
+    }
+
     const fromSubmit = async (e) => {
         e.preventDefault();
         const formEl = document.forms.adStoreForm;
@@ -41,6 +48,8 @@ export default function From() {
 
         // console.log(formData);
     }
+
+
 
     const options = [
         { label: 'bug', id: 1 },
@@ -54,7 +63,6 @@ export default function From() {
         { label: 'english', value: 2 },
         { label: 'math', value: 3 },
     ]
-    const cc = false;
 
     return (
         <>
@@ -62,13 +70,15 @@ export default function From() {
                 <div className="content-wrapper">
                     <section className="content-header">
                         <div className="container-fluid">
-                            <div className="row mb-2">
-                                <div className="col-sm-6 d-flex justify-content-between align-items-center">
-                                    <h1>Consultant Create</h1>
-                                </div>
 
-                                
+                            <div className="container-fluid">
+
+                                <div className=" d-flex justify-content-between align-items-center">
+                                    <h3 className='fs-md fs-sm fs-xs'>Consultant Create</h3>
+
+                                </div>
                             </div>
+
 
                             <div className="card card-primary">
                                 <div className="card-header">
@@ -82,17 +92,17 @@ export default function From() {
                                             help="max 11 characters"
                                             type="text"
                                             placeholder="Enter Your Name"
-                                            required={true}
+                                            required={false}
                                             maxL="11"
                                             minL="3"
-                                            
+
                                         />
 
                                         <InputField
                                             label="Email"
                                             name="email"
                                             help="must be contain @"
-                                            required={false}
+                                            required={true}
                                             type="email"
                                             placeholder="Enter Your Email"
                                         />
@@ -135,13 +145,22 @@ export default function From() {
                                             onChangeHandel={subjectSelect}
                                         />
 
-                                        <ImageUpload 
-                                          label="Profile Image"
-                                          name="profile"
-                                          accept=".jpg, .jpeg, .png"
-                                          help="Set as a profile image "
-                                          size="2"
-                                          onChangeHandel={profileUpload}
+                                        <ImageUpload
+                                            label="Profile Image"
+                                            name="profile"
+                                            accept=".jpg, .jpeg, .png"
+                                            help="Set as a profile image "
+                                            size="2"
+                                            onChangeHandel={profileUpload}
+                                        />
+
+                                        <MultipleImageUpload
+                                            label="User Images"
+                                            name="userImages"
+                                            accept=".jpg, .jpeg, .png"
+                                            help="user gallery image upload max 10 item "
+                                            size="2"
+                                            onChangeHandel={multipleProfileUpload}
                                         />
 
                                     </div>

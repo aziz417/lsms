@@ -16,13 +16,13 @@ function InputField(props) {
             <label htmlFor={props.name}>
                 {props.label}
                 <span className="text-danger">
-                    {props.required == 'true' ? '*' : ''}
+                    {props.required == true ? '*' : ''}
                 </span>
             </label>
 
             <input
                 onChange={(e) => (onChangeEvent(e))}
-                required={props.required == 'true' ? 'required' : false}
+                required={props.required == true ? 'required' : false}
                 type={props.type}
                 className="form-control"
                 id={props.name}

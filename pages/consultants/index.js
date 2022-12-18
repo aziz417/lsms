@@ -9,14 +9,10 @@ export default function Index() {
       <div className="content-wrapper">
         <section className="content-header">
           <div className="container-fluid">
-            <div className="row mb-2">
-              <div className="col-sm-6 d-flex justify-content-between align-items-center">
-                <h1>Consultant Index</h1>
-              </div>
-              <div className="col-sm-6">
-              <CustomLink icon="fa fa-plus mr-1" classes="float-right btn btn-success"  title="Add New" url="/consultants/add" />
+            <div className=" d-flex justify-content-between align-items-center">
+              <h3 className='fs-md fs-sm fs-xs'>Consultant Index</h3>
 
-              </div>
+              <CustomLink icon="fa fa-plus mr-1" classes="float-right btn-sm btn-success" title="Add New" url="/consultants/add" />
             </div>
           </div>
         </section>
