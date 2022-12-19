@@ -159,7 +159,7 @@ export default function From() {
                                             name="userImages"
                                             accept=".jpg, .jpeg, .png"
                                             help="user gallery image upload max 10 item "
-                                            size="2"
+                                            size="1"
                                             onChangeHandel={multipleProfileUpload}
                                         />
 

@@ -2,38 +2,69 @@ import { capitalizeFirst, convertToSlug, ucFirst } from "../../halpers/helper"
 import React, { useEffect, useState } from "react";
 
 export default function MultipleImageUpload(props) {
-    const previewImageLink = 'https://t3.ftcdn.net/jpg/01/17/72/36/360_F_117723612_z7zQmUrrpG4IRGQLvgX5nwtwC18ke3qU.jpg'
 
     const [images, setImages] = useState([])
     const [imageSizeMaxWarning, setImageSizeMaxWarning] = useState([]);
-
-
-    const upload = (event) => {
+    const upload = (event, index) => {
 
         const selectedImages = event.target.files;
         const imageArray = Array.from(selectedImages)
 
         const imageaArrayLinks = imageArray?.map((file) => {
-            if (((file.size / 1024) / 1024).toFixed(2) > 1) {
-                return previewImageLink;
+            const fileSize = ((file.size / 1024) / 1024).toFixed(2)
+            if (fileSize > 1) {
+                return {
+                    "warning": + fileSize + " file size exceeded",
+                    "link": '',
+                    "borderColor": "error-bordar",
+                };
             } else {
-                return URL.createObjectURL(file);
-
+                return {
+                    "warning": null,
+                    "link": URL.createObjectURL(file),
+                    "borderColor": '',
+                };
             }
         })
 
-        setImages((previousImages) => previousImages.concat(imageaArrayLinks));
+        if (images.length == 0) {
+            setImages(imageaArrayLinks);
+        } else {
+            if (index != null) {
+
+                const newArray = images?.map((image, index2) => {
+                    console.log(index);
+                    if (index == index2) {
+                        return {
+                            "warning": imageaArrayLinks[0].warning,
+                            "link": imageaArrayLinks[0].link,
+                            "borderColor": imageaArrayLinks[0].borderColor,
+                        };
+                    } else {
+                        return {
+                            "warning": image.warning,
+                            "link": image.link,
+                            "borderColor": image.borderColor,
+                        };
+                    }
+                })
+
+                setImages(newArray);
 
 
-        // if (event.target.files[0].size <= props.size * 10000) {
-        //     if (props.onChangeHandel) {
-        //         props.onChangeHandel(event)
-        //     }
-        //     setImageSizeMaxWarning(null)
-        //     setImage(event.target.files[0]);
-        // } else {
-        //     setImageSizeMaxWarning('Selected image size should be below 2MB')
-        // }
+            } else {
+                setImages((previousImages) => (previousImages.concat(imageaArrayLinks)));
+            }
+        }
+    
+    }
+
+    const removeItem = (index) => {
+        const removeArray = images.filter((item, i) => {
+            if(i !== index){return item}
+        })
+
+        setImages(removeArray);
     }
 
     return <>
@@ -51,7 +82,7 @@ export default function MultipleImageUpload(props) {
                         accept={props.accept ?? 'image/*'}
                         className="custom-file-input"
                         id="exampleInputFile"
-                        onChange={(e) => (upload(e))}
+                        onChange={(e) => (upload(e, null))}
                         multiple
                     />
 
@@ -60,21 +91,60 @@ export default function MultipleImageUpload(props) {
                 </div>
 
             </div>
-            <span className="text-xs">{capitalizeFirst(props.help + ', accepts files is ' + props.accept + ' and max size ' + props.size + 'mb')}</span>
+            <span className="text-xs">{capitalizeFirst(props.help + ', accepts files is ' + props.accept + ' and max size ' + props.size + 'MB')}</span>
 
-            <div className="multiple-image-priview-section">
+            <div className="multiple-image-priview-section d-flex flex-wrap">
 
-                {images && images?.map((image, index) => {
+                {images && images?.map((fileLink, index) => {
                     return (
-                        <div key={image} className="multiple-image-priview-item">
-                            <span className="multiple-image-priview-item-count">{index + 1}</span>
-                            <span className="multiple-image-priview-item-remove-btn">X</span>
+                        <div key={fileLink.link + index} className={fileLink.link}>
+                            {fileLink.warning != null ?
+                                <div className="imageAddNewOption m-1">
+                                    <label className={`anotherImageAddLavel ${fileLink.borderColor}`} htmlFor={`custom-file-upload-${index}`}>
+                                        <input
 
-                            <img src={image} alt="..." className="img-thumbnail image-with-100x100" />
+                                            type="file"
+                                            accept={props.accept ?? 'image/*'}
+                                            className="custom-file-input d-none"
+                                            id={`custom-file-upload-${index}`}
+                                            onChange={(e) => (upload(e, index))}
+                                        />
+                                        Add One
+                                    </label>
+                                    <span className="text-danger" style={{ fontSize: '12px' }}>{fileLink.warning != null ? fileLink.warning : ''}</span>
 
+                                </div>
+
+                                :
+
+                                <div className="multiple-image-priview-item m-1">
+                                    <span className="multiple-image-priview-item-count">{index + 1}</span>
+                                    <span className="multiple-image-priview-item-remove-btn" onClick={() => (removeItem(index))}>X</span>
+
+                                    <img src={fileLink.link} alt="..." className={`img-thumbnail image-with-100x100 ${fileLink.borderColor}`} />
+
+                                </div>
+                            }
                         </div>
+
                     )
                 })}
+
+
+                {images.length ?
+                    <label className="anotherImageAddLavel m-1" htmlFor={`custom-file-upload-addMore`}>
+                        <input
+
+                            type="file"
+                            accept={props.accept ?? 'image/*'}
+                            className="custom-file-input d-none"
+                            id={`custom-file-upload-addMore`}
+                            onChange={(e) => (upload(e, null))}
+                            multiple
+                        />
+                        Add More...
+                    </label>
+                    : ''}
 
             </div>
 
