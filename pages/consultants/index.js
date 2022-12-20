@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import CustomLink from '../../components/Buttons/CustomLink'
+import DataList from '../../components/Datatable/DataList';
 import Admin from "../../layouts/Admin.js";
 
 export default function Index() {
@@ -198,7 +199,11 @@ export default function Index() {
             </div>
           </div>
         </div>
+
+        <DataList />
       </div>
+
+      
     </div>
   </>
 

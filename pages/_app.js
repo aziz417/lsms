@@ -5,6 +5,7 @@ import Head from "next/head";
 import Router from "next/router";
 
 import '../styles/globals.css'
+import 'react-dropzone-uploader/dist/styles.css'
 
 
 export default class MyApp extends App {

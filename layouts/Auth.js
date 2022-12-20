@@ -5,7 +5,6 @@ export default function Auth({ children }) {
         <>
             <main>
                 <div>
-                    <div>login</div>
                     {children}
                 </div>
             </main>

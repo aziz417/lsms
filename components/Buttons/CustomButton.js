@@ -1,13 +1,11 @@
-import Link from 'next/link'
 
-export default function CustomLink(props) {
+export default function CustomButton(props) {
 
     return <>
-        <Link type="button"
-            href={props.url ?? '/'}
+        <button type={props.type}
             className={props.classes} >
             {props.icon ? <i className={props.icon}></i> : ''}
             {props.title ?? ''}
-        </Link>
+        </button>
     </>
 }

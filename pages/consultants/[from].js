@@ -8,6 +8,7 @@ import Checkbox from '../../components/FormControl/Checkbox.js';
 import Radio from '../../components/FormControl/Radio.js';
 import ImageUpload from '../../components/FormControl/ImageUpload.js';
 import MultipleImageUpload from '../../components/FormControl/MultipleImageUpload.js';
+import MyUploader from '../../components/FormControl/MyUploader.js';
 
 export default function From() {
 
@@ -48,8 +49,6 @@ export default function From() {
 
         // console.log(formData);
     }
-
-
 
     const options = [
         { label: 'bug', id: 1 },
@@ -162,6 +161,15 @@ export default function From() {
                                             size="1"
                                             onChangeHandel={multipleProfileUpload}
                                         />
+
+                                        <MyUploader
+                                            maxFiles={40}
+                                            accept="image/png"
+                                            label="gallery images upload"
+                                            maxFileSize="2000000" // 2000000 == 2mb
+                                        />
+
+
 
                                     </div>
                                     {/* /.card-body */}
