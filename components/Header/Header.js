@@ -1,29 +1,53 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link'
 import { useRouter } from 'next/router';
 import { capitalizeFirst, convertToSlug, ucFirst } from "../../halpers/helper"
 import Breadcrumb from '../Breadcrumb/Breadcrumb.js';
+import api from '../../apis/v1.js'
+import { toast } from 'react-toastify';
+
 
 
 export default function Header() {
     const router = useRouter();
-  
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token === 'null') {
+            router.push('/login')
+        }
+    }, [])
+
+    const logout = async (e) => {
+        e.preventDefault();
+
+        try {
+            const { data } = await api.logout();
+
+            console.log(data);
+            if (data.status === 200) {
+                localStorage.setItem("token", null)
+                toast.success(data?.message)
+                router.push('/login')
+            }
+
+        } catch (e) {
+            console.log(e);
+            // if (e.response?.data?.status === 401) {
+            //   warningMessage(e.response?.data?.error)
+            // }
+            // errorMessages.serverMessages = e.response?.data?.errors;
+        }
+
+
+
+    }
+
     const parameters = router.asPath.split("/").slice(1)
 
-    return (
-        <nav className="main-header navbar mb-2 navbar-expand navbar-white navbar-light">
-            {/* Left navbar links */}
+    return <>
+        <div className="main-header navbar mb-2 navbar-expand navbar-white navbar-light">
 
-            <ol className="breadcrumb breadcrumb-customStyle  float-sm-right">
-                <li className="breadcrumb-item">
-                    <a className="nav-link" data-widget="pushmenu" href="#" role="button"><i className="fas fa-bars" /></a>
-                </li>
-            
-
-                <Breadcrumb parameters={parameters} />
-            </ol>
-
-            {/* Right navbar links */}
             <ul className="navbar-nav ml-auto">
 
                 {/* Notifications Dropdown Menu */}
@@ -76,14 +100,16 @@ export default function Header() {
                             <i className="fas fa-file mr-2" /> Password Change
                         </a>
                         <div className="dropdown-divider" />
-                        <a href="#" className="dropdown-item">
-                            <i className="far fa-sign-out"></i>
+
+                        <Link href="#" onClick={logout} className="dropdown-item">
                             <i className="fa fa-sign-out mr-2" /> Logout
-                        </a>
+                        </Link>
                     </div>
                 </li>
             </ul>
-        </nav>
+        </div>
+    </>
 
-    )
+
+
 }

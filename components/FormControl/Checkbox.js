@@ -21,6 +21,7 @@ export default function Checkbox(props) {
                 id="checkboxSuccess1"
                 checked={isChecked}
                 value={props.value}
+                name={props.name}
                 onChange={(e) => {
                     setIsChecked(!isChecked)
                     checkEvent(e)

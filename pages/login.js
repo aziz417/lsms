@@ -1,39 +1,91 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
 import Auth from "../layouts/Auth.js";
 import InputField from '../components/FormControl/InputField';
 import CustomButton from '../components/Buttons/CustomButton';
 import Link from 'next/link';
+import { useState } from 'react';
+import api from '../apis/v1'
+import { useRouter } from 'next/router'
+import { toast } from 'react-toastify';
+
 
 export default function Login() {
+    const [fromInputs, setFromInputs] = useState({ email: 'az@g.com', password: '11111111' });
+    const [serverMessage, setServerMessage] = useState(false);
+
+    const router = useRouter();
+
+    const fromData = (e) => {
+        const { name, value } = e.target;
+
+        setFromInputs(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
+
+    const fromSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const { data } = await api.login(fromInputs);
+
+            if (data.status === 403) {
+                toast.warning(data?.message)
+            }
+
+            if (data.status === 200) {
+                localStorage.setItem("token", data?.data?.access_token)
+                
+                toast.success(data?.message)
+                router.push('/')
+            }
+
+
+        } catch (e) {
+            // console.log(e);
+            // if (e.response?.data?.status === 401) {
+            //   warningMessage(e.response?.data?.error)
+            // }
+            setServerMessage(e.response?.data?.errors)
+            // console.log(e.response?.data?.errors);
+            //  errorMessages.serverMessages = e.response?.data?.errors;
+        }
+
+    }
+
     return (
         <>
             <div className='d-flex justify-content-center align-items-center'>
-                <div className="login-box">
-
+                <div className="d-flex justify-content-center align-items-center login-box" style={{ height: "100vh" }}>
+              
                     {/* /.login-logo */}
-                    <div className="card">
+                    <div className="card loginAndRegistrationForm">
                         <div className="card-body login-card-body">
                             <p className="login-box-msg">Sign in to start your session</p>
-                            <form action="../../index3.html" method="post">
+                            <form onSubmit={fromSubmit} method="post">
 
                                 <InputField
                                     label="Email"
+                                    eventHandel={fromData}
                                     name="email"
-                                    help="must be contain @"
+                                    help="Must be valid email"
                                     required={true}
                                     type="email"
+                                    value={fromInputs.email}
                                     placeholder="Enter Your Email"
+                                    anyMessage={serverMessage}
                                 />
 
                                 <InputField
                                     label="Password"
+                                    eventHandel={fromData}
                                     name="password"
-                                    help="password must be contain 8"
+                                    help="Password must be 8 characters long"
                                     required={true}
+                                    value={fromInputs.password}
                                     type="password"
                                     placeholder="Enter Your Password"
+                                    anyMessage={serverMessage}
                                 />
 
 

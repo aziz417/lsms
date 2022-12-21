@@ -6,7 +6,8 @@ import Router from "next/router";
 
 import '../styles/globals.css'
 import 'react-dropzone-uploader/dist/styles.css'
-
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 export default class MyApp extends App {
   render() {
@@ -24,6 +25,8 @@ export default class MyApp extends App {
           <title>Notus NextJS by Creative Tim</title>
           <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script> */}
         </Head>
+        <ToastContainer />
+
         <Layout>
           <Component {...pageProps} />
         </Layout>

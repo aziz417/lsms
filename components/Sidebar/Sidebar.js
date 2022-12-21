@@ -12,7 +12,7 @@ export default function Sidebar() {
 
     return (
         <div>
-            <aside  id='sidebarManage' className="main-sidebar sidebar-dark-primary elevation-4">
+            <aside id='sidebarManage' className="main-sidebar sidebar-dark-primary elevation-4">
                 <button onClick={mediaSidebarControl} id='sideBarhideBtn' className='float-right btn btn-danger'>X</button>
 
                 {/* Brand Logo */}

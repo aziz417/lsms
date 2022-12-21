@@ -12,6 +12,8 @@ import React from "react";
 // import '../public/plugins/summernote/summernote-bs4.min.css'
 
 import Document, { Html, Head, Main, NextScript } from "next/document";
+import { ToastContainer } from 'react-toastify';
+
 
 class MyDocument extends Document {
     render() {
@@ -35,6 +37,7 @@ class MyDocument extends Document {
                 <body className="text-blueGray-700 antialiased">
                     <div id="page-transition"></div>
                     <Main />
+                   
                     <NextScript />
 
                     <script src="../plugins/jquery/jquery.min.js"></script>
