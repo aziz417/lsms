@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 
 export default function Login() {
-    const [fromInputs, setFromInputs] = useState({ email: 'az@g.com', password: '11111111' });
+    const [fromInputs, setFromInputs] = useState({ email: 'az@g.com', password: '12345678' });
     const [serverMessage, setServerMessage] = useState(false);
 
     const router = useRouter();
@@ -29,26 +29,19 @@ export default function Login() {
         try {
             const { data } = await api.login(fromInputs);
 
-            if (data.status === 403) {
-                toast.warning(data?.message)
-            }
-
-            if (data.status === 200) {
+            if (data.status_code === 200) {
                 localStorage.setItem("token", data?.data?.access_token)
-                
+
                 toast.success(data?.message)
                 router.push('/')
+            } else {
+                toast.warning(data?.message)
+
             }
 
 
         } catch (e) {
-            // console.log(e);
-            // if (e.response?.data?.status === 401) {
-            //   warningMessage(e.response?.data?.error)
-            // }
             setServerMessage(e.response?.data?.errors)
-            // console.log(e.response?.data?.errors);
-            //  errorMessages.serverMessages = e.response?.data?.errors;
         }
 
     }
@@ -57,7 +50,7 @@ export default function Login() {
         <>
             <div className='d-flex justify-content-center align-items-center'>
                 <div className="d-flex justify-content-center align-items-center login-box" style={{ height: "100vh" }}>
-              
+
                     {/* /.login-logo */}
                     <div className="card loginAndRegistrationForm">
                         <div className="card-body login-card-body">

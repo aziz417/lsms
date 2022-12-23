@@ -13,7 +13,7 @@ export default function Header() {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (token === 'null') {
+        if (!token || token === 'null') {
             router.push('/login')
         }
     }, [])
@@ -24,8 +24,7 @@ export default function Header() {
         try {
             const { data } = await api.logout();
 
-            console.log(data);
-            if (data.status === 200) {
+            if (data.status_code === 200) {
                 localStorage.setItem("token", null)
                 toast.success(data?.message)
                 router.push('/login')
@@ -38,15 +37,22 @@ export default function Header() {
             // }
             // errorMessages.serverMessages = e.response?.data?.errors;
         }
-
-
-
     }
 
     const parameters = router.asPath.split("/").slice(1)
 
     return <>
         <div className="main-header navbar mb-2 navbar-expand navbar-white navbar-light">
+            {/* Left navbar links */}
+
+            <ol className="breadcrumb breadcrumb-customStyle  float-sm-right">
+                <li className="breadcrumb-item">
+                    <a className="nav-link" data-widget="pushmenu" href="#" role="button"><i className="fas fa-bars" /></a>
+                </li>
+
+                <Breadcrumb parameters={parameters} />
+            </ol>
+
 
             <ul className="navbar-nav ml-auto">
 
@@ -54,54 +60,60 @@ export default function Header() {
                 <li className="nav-item dropdown">
                     <a className="nav-link" data-toggle="dropdown" href="#">
                         <i className="far fa-bell" />
-                        <span className="badge badge-warning navbar-badge">15</span>
-                    </a>
+                        <span className="badge badge-warning navbar-badge" > 15 </span> </a>
                     <div className="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span className="dropdown-item dropdown-header">15 Notifications</span>
+
+                        <span className="dropdown-item dropdown-header"> 15 Notifications </span>
                         <div className="dropdown-divider" />
                         <a href="#" className="dropdown-item">
                             <i className="fas fa-envelope mr-2" /> 4 new messages
-                            <span className="float-right text-muted text-sm">3 mins</span>
+                            <span className="float-right text-muted text-sm" > 3 mins </span>
                         </a>
                         <div className="dropdown-divider" />
                         <a href="#" className="dropdown-item">
                             <i className="fas fa-users mr-2" /> 8 friend requests
-                            <span className="float-right text-muted text-sm">12 hours</span>
+                            <span className="float-right text-muted text-sm" > 12 hours </span>
                         </a>
                         <div className="dropdown-divider" />
-                        <a href="#" className="dropdown-item">
+                        <a href="#"
+                            className="dropdown-item">
                             <i className="fas fa-file mr-2" /> 3 new reports
-                            <span className="float-right text-muted text-sm">2 days</span>
+                            <span className="float-right text-muted text-sm" > 2 days </span>
                         </a>
                         <div className="dropdown-divider" />
-                        <a href="#" className="dropdown-item dropdown-footer">See All Notifications</a>
+                        <a href="#" className="dropdown-item dropdown-footer">
+                            See All Notifications </a>
                     </div>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" data-widget="fullscreen" href="#" role="button">
+                    <a className="nav-link"
+                        data-widget="fullscreen"
+                        href="#" role="button">
                         <i className="fas fa-expand-arrows-alt" />
                     </a>
                 </li>
                 <li className="nav-item dropdown">
-                    <a className="nav-link" data-toggle="dropdown" href="#">
-                        <i className='fa fa-user'></i>
+                    <a className="nav-link"
+                        data-toggle="dropdown" href="#">
+                        <i className='fa fa-user'> </i>
                     </a>
                     <div className="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <div className="dropdown-divider" />
                         <a href="#" className="dropdown-item">
-                            <i className="fas fa-envelope mr-2" /> Profile
+                            <i className="fas fa-envelope mr-2" />Profile
                         </a>
+                        < div className="dropdown-divider" />
+                        <a href="#" className="dropdown-item">
+                            <i className="fas fa-users mr-2" />Setting</a>
                         <div className="dropdown-divider" />
                         <a href="#" className="dropdown-item">
-                            <i className="fas fa-users mr-2" /> Setting
-                        </a>
-                        <div className="dropdown-divider" />
-                        <a href="#" className="dropdown-item">
-                            <i className="fas fa-file mr-2" /> Password Change
+                            <i className="fas fa-file mr-2" />Password Change
                         </a>
                         <div className="dropdown-divider" />
 
-                        <Link href="#" onClick={logout} className="dropdown-item">
+                        <Link href="#"
+                            onClick={logout}
+                            className="dropdown-item">
                             <i className="fa fa-sign-out mr-2" /> Logout
                         </Link>
                     </div>

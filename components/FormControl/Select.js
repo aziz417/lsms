@@ -18,11 +18,8 @@ const Select = (props) => {
 
     return <>
         <div className="form-group">
-            <label className="capitalize" htmlFor={props.id}>
-                {props.lavel}
-                <span className="text-danger">
-                    {props.required == 'true' ? '*' : ''}
-                </span>
+            <label className="capitalize" htmlFor={props.id}>{props.lavel}
+                <span className="text-danger">{props.required == 'true' ? '*' : ''}</span>
             </label>
 
             <Select2
@@ -33,7 +30,7 @@ const Select = (props) => {
                 required={props.required}
                 id={props.id}
             />
-              <span className="text-xs capitalize">{props.help}</span>
+            <span className="text-xs capitalize" > {props.help} </span>
         </div>
 
     </>

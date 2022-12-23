@@ -57,6 +57,13 @@ export default function Sidebar() {
                                     Dashboard
                                 </Link>
                             </li>
+
+                            <li className="nav-item">
+                                <Link className="nav-link" href="/admins">
+                                    <i className="nav-icon fas fa-users" />
+                                     Admin List
+                                </Link>
+                            </li>
                         
                             <li className="nav-item">
                                 <a href="#" className="nav-link">

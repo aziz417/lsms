@@ -5,18 +5,9 @@ import { capitalizeFirst, convertToSlug, ucFirst } from "../../halpers/helper"
 
 function InputField(props) {
 
-    const [errorMessage, setErrorMessage] = useState(false);
-
     const onChangeEvent = (e) => {
         if (props.eventHandel) {
             props.eventHandel(e)
-        }
-    }
-
-    if (props.anyMessage) {
-        // error message
-        if (props.anyMessage[props.name][0]) {
-            setErrorMessage(props.anyMessage[props.name][0])
         }
     }
 
@@ -28,6 +19,9 @@ function InputField(props) {
                     {props.required == true ? '*' : ''}
                 </span>
             </label>
+            
+            <br/>
+            <span className="text-danger fs-10">{props.anyMessage?.[props.name]?.[0]}</span>
 
             <input
                 onChange={(e) => (onChangeEvent(e))}
@@ -43,10 +37,6 @@ function InputField(props) {
                 value={props.value}
             />
             <span className="text-xs capitalize">{props.help}</span>
-
-            <span>{errorMessage != !false ? errorMessage : ''}</span>
-
-
         </div>
     </>
 }

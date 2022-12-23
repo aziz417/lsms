@@ -1,36 +1,26 @@
 
 import DataTable from 'react-data-table-component';
 
-export default function DataList(){
-    const data = [
-        {
-            id: 1,
-            title: 'Beetlejuice',
-            year: '1988',
-        },
-        {
-            id: 2,
-            title: 'Ghostbusters',
-            year: '1984',
-        },
-    ];
-
-    const columns = [
-        {
-            name: 'Title',
-            selector: row => row.title,
-        },
-        {
-            name: 'Year',
-            selector: row => row.year,
-        },
-    ];
-
+export default function DataList(props) {
+  
     return <>
-    
-    <DataTable
-            columns={columns}
-            data={data}
+
+        <DataTable
+            columns={props.columns}
+            data={props.data}
+            pagination
+            fixedHeader
+            fixedHeaderScrollHeight='450px'
+            selectableRows
+            selectableRowsHighlight
+            responsive={true}
+            highlightOnHover="on"
+            pointerOnHover="on"
+            onColumnOrderChange="on"
+            keyField="id"
+            defaultSortFieldId="on"
+          
+
         />
     </>
 }
