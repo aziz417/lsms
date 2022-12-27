@@ -41,7 +41,7 @@ export default function Breadcrumb(props) {
                 {props.parameters?.map((parameter, index) => {
                     if (Number.isInteger(parameter) == false && parameter) {
                         return (
-                            <di key={index}>
+                            <div key={index}>
                                 <div className="dropdown-divider" />
                                 <Link
                                     className={props.parameters.length == (index + 1) ? "font-weight-bold dropdown-item btn disabled" : "font-weight-bold dropdown-item"}
@@ -49,7 +49,7 @@ export default function Breadcrumb(props) {
                                     <i className="fa fa-chevron-right mr-2" />
                                     {ucFirst(parameter)}
                                 </Link>
-                            </di>
+                            </div>
 
                         )
                     }

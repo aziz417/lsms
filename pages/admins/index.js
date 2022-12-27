@@ -10,16 +10,18 @@ import CustomButton from '../../components/Buttons/CustomButton';
 
 
 export default function Index() {
-    const [allData, setAllData] = useState('');
+    const [allData, setAllData] = useState([]);
+	const [hideDirector, setHideDirector] = useState(false);
+
 
     const allDataGet = async () => {
         try {
             const { data } = await api.admins()
-            console.log(data);
             setAllData(data?.data)
 
         } catch (e) {
-            toast.success(data?.message)
+            dfg
+            toast.warning(e)
         }
     }
 
@@ -31,26 +33,40 @@ export default function Index() {
         {
             name: 'Id',
             selector: row => row.id,
-            sortable: true
+            sortable: true,
+            search: false,
+            column_name: 'id',
         },
         {
             name: 'First Name',
             selector: row => row.first_name,
-            sortable: true
+            sortable: true,
+            omit: hideDirector,
+            search: true,
+            column_name: 'first_name',
+
         },
         {
             name: 'Last Name',
             selector: row => row.last_name,
-            sortable: true
+            sortable: true,
+            omit: hideDirector,
+            search: true,
+            column_name: 'last_name',
         },
         {
             name: 'Email',
             selector: row => row.email,
-            sortable: true
+            sortable: true,
+            search: true,
+            column_name: 'email',
         },
         {
             name: 'Phone',
             selector: row => row.phone,
+            sortable: true,
+            search: true,
+            column_name: 'phone',
         },
         {
             name: 'Action',
@@ -88,7 +104,8 @@ export default function Index() {
                     </div>
                 </section>
 
-                <DataList columns={columns} data={allData} />
+                <button onClick={() => setHideDirector(!hideDirector)}>Hide Directory Column</button>
+                <DataList columns={columns} data={allData} multipleDeleteManage={true} />
             </div>
         </div>
     </>
