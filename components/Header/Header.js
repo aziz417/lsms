@@ -14,7 +14,7 @@ export default function Header() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token || token === 'null') {
-            router.push('/login')
+            // router.push('/login')
         }
     }, [])
 

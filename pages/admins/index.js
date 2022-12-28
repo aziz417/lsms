@@ -16,8 +16,38 @@ export default function Index() {
 
     const allDataGet = async () => {
         try {
-            const { data } = await api.admins()
-            setAllData(data?.data)
+            // const { data } = await api.admins()
+            const data = [
+                {
+                    "id": 1,
+                    "name": "touhidul",
+                    "phone": "01789898989",
+                    "created_at": "2022-12-29T08:28:40.000000Z",
+                    "updated_at": "2022-12-29T08:28:40.000000Z"
+                },
+                {
+                    "id": 2,
+                    "name": "touhiduy",
+                    "phone": "01789898985",
+                    "created_at": "2022-12-29T08:28:53.000000Z",
+                    "updated_at": "2022-12-29T08:28:53.000000Z"
+                },
+                {
+                    "id": 3,
+                    "name": "Haquer",
+                    "phone": "01798445620",
+                    "created_at": "2022-12-29T08:29:03.000000Z",
+                    "updated_at": "2022-12-28T12:07:29.000000Z"
+                },
+                {
+                    "id": 4,
+                    "name": "Abdul Aziz",
+                    "phone": "01798445611",
+                    "created_at": "2022-12-29T08:29:20.000000Z",
+                    "updated_at": "2022-12-29T08:29:20.000000Z"
+                }
+            ]
+            setAllData(data)
 
         } catch (e) {
             dfg
@@ -43,7 +73,7 @@ export default function Index() {
             column_name: 'name'
 
         },
-       
+
         {
             name: 'Phone',
             selector: row => row.phone,
@@ -53,6 +83,7 @@ export default function Index() {
         },
         {
             name: 'Action',
+            column_name: 'action',
             cell: row => <>
                 <CustomButton
                     type="button"
@@ -77,8 +108,9 @@ export default function Index() {
     const search_columns_name = ['name', 'phone']
 
     const search_and_hide_columns = {
-        'name'  : { label: 'Name', search: true, column_hide: false },
+        'name'  : { label: 'Name', search: true, column_hide: true },
         'phone' : { label: 'Phone', search: true, column_hide: true },
+        'action' : { label: 'Action', search: false, column_hide: true },
     }
 
     return <>
