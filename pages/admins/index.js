@@ -34,39 +34,27 @@ export default function Index() {
             name: 'Id',
             selector: row => row.id,
             sortable: true,
-            search: false,
-            column_name: 'id',
         },
         {
             name: 'First Name',
             selector: row => row.first_name,
             sortable: true,
-            omit: hideDirector,
-            search: true,
-            column_name: 'first_name',
-
         },
         {
             name: 'Last Name',
             selector: row => row.last_name,
             sortable: true,
-            omit: hideDirector,
-            search: true,
-            column_name: 'last_name',
         },
         {
             name: 'Email',
             selector: row => row.email,
             sortable: true,
-            search: true,
-            column_name: 'email',
+
         },
         {
             name: 'Phone',
             selector: row => row.phone,
             sortable: true,
-            search: true,
-            column_name: 'phone',
         },
         {
             name: 'Action',
@@ -91,6 +79,15 @@ export default function Index() {
 
     ];
 
+    const search_columns_name = ['first_name', 'last_name', 'phone', 'email']
+
+    const search_and_hide_columns = {
+        'first_name' : { label: 'First name', search: false, column_hide: false },
+        'last_name'  : { label: 'Last name', search: true, column_hide: true },
+        'phone'      : { label: 'Phone', search: false, column_hide: true },
+        'email'      : { label: 'Email', search: true, column_hide: false },
+    }
+
     return <>
         <div>
             <div className="content-wrapper">
@@ -105,7 +102,7 @@ export default function Index() {
                 </section>
 
                 <button onClick={() => setHideDirector(!hideDirector)}>Hide Directory Column</button>
-                <DataList columns={columns} data={allData} multipleDeleteManage={true} />
+                <DataList columns={columns} data={allData} multipleDeleteManage={true} search_columns_name={search_columns_name} search_and_hide_columns={search_and_hide_columns} />
             </div>
         </div>
     </>
