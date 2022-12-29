@@ -28,7 +28,7 @@ export default function Checkbox(props) {
                 }}
             />
 
-            <label className="capitalize" htmlFor="checkboxSuccess1">
+            <label className="capitalize" htmlFor={props.name}>
                 {ucFirst(props.label)}
                 <span className="text-danger">
                     {props.required == 'true' ? '*' : ''}

@@ -1,9 +1,10 @@
 
 import DataTable from 'react-data-table-component';
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect, use } from 'react';
 import CustomButton from '../Buttons/CustomButton';
 import DeleteModal from '../Modals/DeleteModal';
 import { differenceBy } from '../../halpers/helper';
+import Checkbox from '../FormControl/Checkbox'
 
 export default function DataList(props) {
     const [selectedRows, setSelectedRows] = useState([]);
@@ -14,11 +15,13 @@ export default function DataList(props) {
     const [search, setSearch] = useState('');
     const [columns, setColumns] = useState([]);
     const [columnsHideShow, setColumnsHideShow] = useState(true);
+    const [search_and_hide_columns, setSearch_and_hide_columns] = useState([]);
 
     useEffect(() => {
         setData(props.data)
         setMultipleDelete(props.multipleDeleteManage)
         setColumns(props.columns)
+        setSearch_and_hide_columns(props.search_and_hide_columns)
 
     }, [props?.data])
 
@@ -44,7 +47,6 @@ export default function DataList(props) {
 
 
     const handleRowSelected = useCallback(state => {
-
         setSelectedRows(state.selectedRows);
         state.selectedRows.length > 0 ? setMultipleDeleteItems(() => state.selectedRows.map(item => item.id)) : setMultipleDeleteItems([])
 
@@ -82,8 +84,74 @@ export default function DataList(props) {
     }
 
 
-    return <>
 
+    const setting = (type, clm) => {
+
+        const newObj = Object.keys(search_and_hide_columns).map((columnName) => {
+
+            if (clm === columnName) {
+                if (type == 'search') {
+                    return {
+                        [`${columnName}`]: {
+                            label: search_and_hide_columns[columnName]['label'],
+                            search: !search_and_hide_columns[columnName]['search'],
+                            column_hide: search_and_hide_columns[columnName]['column_hide'],
+                        }
+                    }
+                } else {
+                    return {
+                        [`${columnName}`]: {
+                            label: search_and_hide_columns[columnName]['label'],
+                            search: search_and_hide_columns[columnName]['search'],
+                            column_hide: !search_and_hide_columns[columnName]['column_hide'],
+                        }
+                    }
+                }
+            } else {
+                return {
+                    [`${columnName}`]: {
+                        label: search_and_hide_columns[columnName]['label'],
+                        search: search_and_hide_columns[columnName]['search'],
+                        column_hide: search_and_hide_columns[columnName]['column_hide'],
+                    }
+                }
+            }
+        })
+
+        const new_ooooo = [...newObj]
+        let dddddddd = {};
+        for (let index = 0; index < new_ooooo.length; index++) {
+            Object.assign(dddddddd, new_ooooo[index])
+            
+        }
+        console.log(dddddddd, 'ffffffffffff');
+
+        const ddd = new_ooooo.map((item) => item)
+
+        console.log(ddd);
+        console.log(props.search_and_hide_columns, 'nnnnnnnnnn');
+
+        // setSearch_and_hide_columns(newObj);
+
+        // const new_columns = columns.map((clmN) => {
+        //     for (var key in search_and_hide_columns) {
+        //         if (key == clm) {
+        //             console.log(search_and_hide_columns, key, clm);
+        //             return Object.assign(clmN, { omit: search_and_hide_columns[key]['column_hide'] })
+        //         }
+        //     }
+
+        //     return clmN
+        // })
+
+
+        // setColumns(new_columns)
+        // setColumnsHideShow(!columnsHideShow)
+    }
+
+
+
+    return <>
         <button onClick={hloBtn}>Test</button>
         {
             multipleDelete == true && multipleDeleteItems.length > 1 ?
@@ -120,24 +188,43 @@ export default function DataList(props) {
                                 <i className="fa fa-cog" aria-hidden="true"></i>
                             </a>
                             <div className="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                                <div className='text-center p-2'><strong>Table Setting</strong></div>
                                 <div className="dropdown-divider" />
-                                <table className='table'>
-                                    <thead>
-                                        <tr><th>F.N: </th>
-                                            <th>Search: </th>
-                                            <th>Hide/Show: </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td className='text-xs'>First Name: </td>
-                                            <td><input className='from-control' type="checkbox" /></td>
-                                            <td><input className='from-control' type="checkbox" /></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
 
+                                <div className='d-flex justify-content-center p-2 text-xs'>
+                                    <div className='w-50'><label>Field Name:</label> </div>
+                                    <div className='d-flex justify-content-between'>
+                                        <label className='px-2'>Search:</label>
+                                        <label className='px-2'>Hide/Show:</label>
+                                    </div>
+                                </div>
                                 <div className="dropdown-divider" />
+
+                                {Object.keys(search_and_hide_columns)?.map((clm) => {
+
+                                    return (
+                                        <div key={search_and_hide_columns[clm].label} className='d-flex justify-content-center p-2 text-xs'>
+                                            <div className='w-50 d-flex justify-content-start'>
+                                                <label>{search_and_hide_columns[clm].label}</label>
+                                            </div>
+                                            <div className='d-flex justify-content-between w-50'>
+                                                <input
+                                                    checked={search_and_hide_columns[clm].search}
+                                                    className='from-control'
+                                                    type="checkbox"
+                                                    onChange={() => setting('search', clm)}
+                                                />
+                                                <input
+                                                    checked={search_and_hide_columns[clm].column_hide}
+                                                    className='from-control mr-5'
+                                                    type="checkbox"
+                                                    onChange={() => setting('column_hide', clm)}
+                                                />
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+
                             </div>
                         </li>
                     </ul>
