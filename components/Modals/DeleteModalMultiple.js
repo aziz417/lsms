@@ -1,4 +1,4 @@
-export default function DeleteModal(props) {
+export default function DeleteModalMultiple(props) {
     return <>
         <div className="container d-flex justify-content-center">
             <div id="my-modal" className="modal fade" tabIndex={-1} role="dialog" aria-hidden="true">
@@ -9,7 +9,7 @@ export default function DeleteModal(props) {
                                 <div className="card-header pb-0 bg-white border-0 ">
                                     <div className="row">
                                         <div className="col ml-auto">
-                                            <button onClick={() => props.clickHandel('cancel')}  type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                            <button onClick={() => props.clickHandelMultiple('cancel')}  type="button" className="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">×</span>
                                             </button>
                                         </div>
@@ -19,10 +19,10 @@ export default function DeleteModal(props) {
                                 <div className="card-body px-sm-4 mb-2 pt-1 pb-0">
                                     <div className="row justify-content-end no-gutters">
                                         <div className="col-auto">
-                                            <button type="button" onClick={() => props.clickHandel('cancel')} className="btn-xs btn-success" data-dismiss="modal">Cancel</button>
+                                            <button type="button" onClick={() => props.clickHandelMultiple('cancel')} className="btn-xs btn-success" data-dismiss="modal">Cancel</button>
                                         </div>
                                         <div className="col-auto">
-                                            <button type="button" onClick={() => props.clickHandel('delete')} className="btn-xs btn-danger px-2 ml-1" data-dismiss="modal">Delete</button>
+                                            <button type="button" onClick={() => props.clickHandelMultiple('delete')} className="btn-xs btn-danger px-2 ml-1" data-dismiss="modal">Delete</button>
                                         </div>
                                     </div>
                                 </div>

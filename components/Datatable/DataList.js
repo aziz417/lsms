@@ -1,10 +1,8 @@
-
 import DataTable from 'react-data-table-component';
 import { useState, useMemo, useCallback, useEffect, use } from 'react';
-import CustomButton from '../Buttons/CustomButton';
-import DeleteModal from '../Modals/DeleteModal';
+import DeleteModalMultiple from '../Modals/DeleteModalMultiple.js';
 import { differenceBy } from '../../halpers/helper';
-import Checkbox from '../FormControl/Checkbox'
+import api from '../../apis/v1.js'
 
 export default function DataList(props) {
     const [selectedRows, setSelectedRows] = useState([]);
@@ -12,9 +10,8 @@ export default function DataList(props) {
     const [multipleDelete, setMultipleDelete] = useState(false);
     const [toggleCleared, setToggleCleared] = useState(false);
     const [data, setData] = useState([]);
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState();
     const [columns, setColumns] = useState([]);
-    const [columnsHideShow, setColumnsHideShow] = useState(true);
     const [search_and_hide_columns, setSearch_and_hide_columns] = useState([]);
 
     useEffect(() => {
@@ -27,14 +24,15 @@ export default function DataList(props) {
 
     useEffect(() => {
         const searchResult = props.data.filter((item) => {
-
-            for (let i = 0; i < props.search_columns_name.length; i++) {
-                if (item[props.search_columns_name[i]].match(search)) {
-                    return item;
-                    break
+            const search_columns = Object.keys(search_and_hide_columns)
+            for (let i = 0; i < search_columns.length; i++) {
+                if (search_and_hide_columns[search_columns[i]]['search'] === true) {
+                    if (item[search_columns[i]].toString().toLowerCase().match(search?.toLowerCase())) {
+                        return item;
+                        break
+                    }
                 }
             }
-
         })
 
         if (search) {
@@ -48,118 +46,97 @@ export default function DataList(props) {
 
     const handleRowSelected = useCallback(state => {
         setSelectedRows(state.selectedRows);
-        state.selectedRows.length > 0 ? setMultipleDeleteItems(() => state.selectedRows.map(item => item.id)) : setMultipleDeleteItems([])
-
+        // state.selectedRows.length > 1 ? setMultipleDelete(true) : setMultipleDelete(false)
     }, []);
 
 
-    const itemDelete = (type) => {
-        if (type == 'delete') {
-            setToggleCleared(!toggleCleared);
-            setData(differenceBy(data, selectedRows, 'id'));
+    const itemDeleteLL = (type) => {
 
-            // api call multipleDeleteItems 
+        console.log(type, 'fffffffffffff');
+        // let deleteAllItems = selectedRows.map(item => item.id);
+
+        // selectedRows.length > 0 ? setMultipleDeleteItems(() => ) : setMultipleDeleteItems([])
+
+
+        if (type == 'delete') {
+
+            try {
+
+
+                // const { data } = await  api.deleteItems('/admins/delete', [multipleDeleteItems])
+                // if (data?.status_code === 200) {
+                //     toast.success(data.message)
+                //     setToggleCleared(!toggleCleared);
+                //     setData(differenceBy(data, selectedRows, 'id'));
+                //     setMultipleDelete(!multipleDelete)
+                // }
+
+            } catch (e) {
+                // toast.warning(e)
+            }
+
+            // api call multipleDeleteItems
         } else {
             setToggleCleared(!toggleCleared);
+            setMultipleDelete(!multipleDelete)
         }
-    }
-
-    const hide_clmns = ['Email', 'Phone']
-
-    const hloBtn = () => {
-
-        const new_columns = columns.map((clm) => {
-            for (let i = 0; i < hide_clmns.length; i++) {
-
-                if (clm.name === hide_clmns[i]) {
-                    return Object.assign(clm, { omit: columnsHideShow })
-                }
-            }
-            return clm
-
-        })
-
-        setColumns(new_columns)
-        setColumnsHideShow(!columnsHideShow)
     }
 
 
 
     const setting = (type, clm) => {
+        let search_hide_new_obj = {};
 
-        const newObj = Object.keys(search_and_hide_columns).map((columnName) => {
-
-            if (clm === columnName) {
-                if (type == 'search') {
-                    return {
-                        [`${columnName}`]: {
-                            label: search_and_hide_columns[columnName]['label'],
-                            search: !search_and_hide_columns[columnName]['search'],
-                            column_hide: search_and_hide_columns[columnName]['column_hide'],
+        const objectKeys = Object.keys(search_and_hide_columns);
+        for (let i = 0; i < objectKeys.length; i++) {
+            if (clm === objectKeys[i]) {
+                if (type === 'search') {
+                    Object.assign(search_hide_new_obj, {
+                        [`${objectKeys[i]}`]: {
+                            label: search_and_hide_columns[objectKeys[i]]['label'],
+                            search: !search_and_hide_columns[objectKeys[i]]['search'],
+                            column_hide: search_and_hide_columns[objectKeys[i]]['column_hide'],
+                            disable: search_and_hide_columns[objectKeys[i]]['disable'],
                         }
-                    }
+                    })
                 } else {
-                    return {
-                        [`${columnName}`]: {
-                            label: search_and_hide_columns[columnName]['label'],
-                            search: search_and_hide_columns[columnName]['search'],
-                            column_hide: !search_and_hide_columns[columnName]['column_hide'],
+                    Object.assign(search_hide_new_obj, {
+                        [`${objectKeys[i]}`]: {
+                            label: search_and_hide_columns[objectKeys[i]]['label'],
+                            search: search_and_hide_columns[objectKeys[i]]['search'],
+                            column_hide: !search_and_hide_columns[objectKeys[i]]['column_hide'],
+                            disable: search_and_hide_columns[objectKeys[i]]['disable'],
                         }
-                    }
+                    })
                 }
             } else {
-                return {
-                    [`${columnName}`]: {
-                        label: search_and_hide_columns[columnName]['label'],
-                        search: search_and_hide_columns[columnName]['search'],
-                        column_hide: search_and_hide_columns[columnName]['column_hide'],
+                Object.assign(search_hide_new_obj, {
+                    [`${objectKeys[i]}`]: {
+                        label: search_and_hide_columns[objectKeys[i]]['label'],
+                        search: search_and_hide_columns[objectKeys[i]]['search'],
+                        column_hide: search_and_hide_columns[objectKeys[i]]['column_hide'],
+                        disable: search_and_hide_columns[objectKeys[i]]['disable'],
                     }
+                })
+            }
+        }
+
+        setSearch_and_hide_columns((pre) => search_hide_new_obj)
+        const new_columns = columns.map((clmN) => {
+            for (var key in search_and_hide_columns) {
+                if (key === clm && clmN.column_name === clm && type === 'column_hide') {
+                    return Object.assign(clmN, { omit: search_and_hide_columns[clm][type] })
                 }
             }
+            return clmN
         })
-
-        const new_ooooo = [...newObj]
-        let dddddddd = {};
-        for (let index = 0; index < new_ooooo.length; index++) {
-            Object.assign(dddddddd, new_ooooo[index])
-            
-        }
-        console.log(dddddddd, 'ffffffffffff');
-
-        const ddd = new_ooooo.map((item) => item)
-
-        console.log(ddd);
-        console.log(props.search_and_hide_columns, 'nnnnnnnnnn');
-
-        // setSearch_and_hide_columns(newObj);
-
-        // const new_columns = columns.map((clmN) => {
-        //     for (var key in search_and_hide_columns) {
-        //         if (key == clm) {
-        //             console.log(search_and_hide_columns, key, clm);
-        //             return Object.assign(clmN, { omit: search_and_hide_columns[key]['column_hide'] })
-        //         }
-        //     }
-
-        //     return clmN
-        // })
-
-
-        // setColumns(new_columns)
-        // setColumnsHideShow(!columnsHideShow)
+        setColumns(new_columns)
     }
 
 
-
     return <>
-        <button onClick={hloBtn}>Test</button>
-        {
-            multipleDelete == true && multipleDeleteItems.length > 1 ?
-                <button className="btn btn-danger" data-toggle="modal" data-target="#my-modal">Selected Items Delete</button>
-                : ''
-        }
 
-        <DeleteModal clickHandel={itemDelete} />
+        <DeleteModalMultiple clickHandelMultiple={itemDeleteLL} />
         <DataTable
             columns={columns}
             data={data}
@@ -181,59 +158,70 @@ export default function DataList(props) {
             subHeader
             subHeaderComponent={
                 <>
-                    <ul className="navbar-nav ml-auto">
-                        <li className="nav-item dropdown">
-                            <a className="nav-link mr-4"
-                                data-toggle="dropdown" href="#">
-                                <i className="fa fa-cog" aria-hidden="true"></i>
-                            </a>
-                            <div className="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                                <div className='text-center p-2'><strong>Table Setting</strong></div>
-                                <div className="dropdown-divider" />
+                    <div className='d-flex justify-content-end'>
+                        {
+                            selectedRows.length > 1 && multipleDelete ?
+                                <button className="btn btn-danger float-right" data-toggle="modal" data-target="#my-modal">
+                                    <i className='fa fa-trash' /></button>
+                                : ''
+                        }
+                        <ul className="navbar-nav ml-auto">
+                            <li className="nav-item dropdown">
+                                <a className=" btn btn-success mx-2"
+                                    data-toggle="dropdown" href="#">
+                                    <i className="fa fa-cog" aria-hidden="true"></i>
+                                </a>
+                                <div className="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                                    <div className='text-center p-2'><strong>Table Setting</strong></div>
+                                    <div className="dropdown-divider" />
 
-                                <div className='d-flex justify-content-center p-2 text-xs'>
-                                    <div className='w-50'><label>Field Name:</label> </div>
-                                    <div className='d-flex justify-content-between'>
-                                        <label className='px-2'>Search:</label>
-                                        <label className='px-2'>Hide/Show:</label>
-                                    </div>
-                                </div>
-                                <div className="dropdown-divider" />
-
-                                {Object.keys(search_and_hide_columns)?.map((clm) => {
-
-                                    return (
-                                        <div key={search_and_hide_columns[clm].label} className='d-flex justify-content-center p-2 text-xs'>
-                                            <div className='w-50 d-flex justify-content-start'>
-                                                <label>{search_and_hide_columns[clm].label}</label>
-                                            </div>
-                                            <div className='d-flex justify-content-between w-50'>
-                                                <input
-                                                    checked={search_and_hide_columns[clm].search}
-                                                    className='from-control'
-                                                    type="checkbox"
-                                                    onChange={() => setting('search', clm)}
-                                                />
-                                                <input
-                                                    checked={search_and_hide_columns[clm].column_hide}
-                                                    className='from-control mr-5'
-                                                    type="checkbox"
-                                                    onChange={() => setting('column_hide', clm)}
-                                                />
-                                            </div>
+                                    <div className='d-flex justify-content-center p-2 text-xs'>
+                                        <div className='w-50'><label>Field Name:</label></div>
+                                        <div className='d-flex justify-content-between'>
+                                            <label className='px-2'>Search:</label>
+                                            <label className='px-2'>Hide/Show:</label>
                                         </div>
-                                    )
-                                })}
+                                    </div>
+                                    <div className="dropdown-divider" />
 
-                            </div>
-                        </li>
-                    </ul>
-                    <input
-                        type={'text'}
-                        placeholder="Search here"
-                        onChange={(e) => setSearch(e.target.value)}
-                        className='form-control w-25'
-                    />
+                                    {Object.keys(search_and_hide_columns)?.map((clm) => {
+
+                                        return (
+                                            <div key={search_and_hide_columns[clm].label}
+                                                className='d-flex justify-content-center p-2 text-xs'>
+                                                <div className='w-50 d-flex justify-content-start'>
+                                                    <label>{search_and_hide_columns[clm].label}</label>
+                                                </div>
+                                                <div className='d-flex justify-content-between w-50'>
+                                                    <input
+                                                        checked={search_and_hide_columns[clm].search}
+                                                        className='from-control'
+                                                        disabled={search_and_hide_columns[clm].disable}
+                                                        type="checkbox"
+                                                        onChange={() => setting('search', clm)}
+                                                    />
+                                                    <input
+                                                        checked={search_and_hide_columns[clm].column_hide}
+                                                        className='from-control mr-5'
+                                                        type="checkbox"
+                                                        onChange={() => setting('column_hide', clm)}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+
+                                </div>
+                            </li>
+                        </ul>
+                        <input
+                            type={'text'}
+                            placeholder="Search here"
+                            onChange={(e) => setSearch(e.target.value)}
+                            className='form-control w-auto'
+                        />
+
+                    </div>
                 </>
             }
         />

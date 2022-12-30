@@ -6,12 +6,15 @@ import Admin from "../../layouts/Admin.js";
 import api from "../../apis/v1"
 import { toast } from 'react-toastify';
 import CustomButton from '../../components/Buttons/CustomButton';
+import { differenceBy } from '../../halpers/helper';
+import DeleteModal from '../../components/Modals/DeleteModal';
 
 
 
 export default function Index() {
     const [allData, setAllData] = useState([]);
-	const [hideDirector, setHideDirector] = useState(false);
+    const [hideDirector, setHideDirector] = useState(false);
+    const [itemDeleteId, setItemDeleteId] = useState();
 
 
     const allDataGet = async () => {
@@ -29,6 +32,26 @@ export default function Index() {
         allDataGet()
     }, [])
 
+    const itemDelete = async (type) => {
+        if (type == 'delete') {
+            try {
+
+                const { data } = await api.deleteItems('/admins/delete', [itemDeleteId])
+                if (data?.status_code === 200) {
+                    toast.success(data.message)
+                    const filterData = allData?.filter((item) => {
+                        return item.id !== itemDeleteId
+                    })
+                    setAllData(filterData);
+                }
+            } catch (e) {
+                console.log(e);
+                toast.warning(e)
+            }
+        }
+
+    }
+
     const columns = [
         {
             name: 'Id',
@@ -43,7 +66,7 @@ export default function Index() {
             column_name: 'name'
 
         },
-       
+
         {
             name: 'Phone',
             selector: row => row.phone,
@@ -53,6 +76,7 @@ export default function Index() {
         },
         {
             name: 'Action',
+            column_name: 'action',
             cell: row => <>
                 <CustomButton
                     type="button"
@@ -64,11 +88,14 @@ export default function Index() {
                     classes="btn-sm btn-primary btn m-2"
                     icon="fa fa-pen mr-1"
                 />
-                <CustomButton
+
+                <button type='button' onClick={() => setItemDeleteId(row.id)} data-toggle="modal" data-target="#my-modal" className='btn-sm btn-danger btn m-1'><i className='fa fa-trash'></i></button>
+                {/* <CustomButton
                     type="button"
                     classes="btn-sm btn-danger btn m-1"
+                    onClick={itemDelete}
                     icon="fa fa-trash"
-                />
+                /> */}
             </>,
         },
 
@@ -77,11 +104,15 @@ export default function Index() {
     const search_columns_name = ['name', 'phone']
 
     const search_and_hide_columns = {
-        'name'  : { label: 'Name', search: true, column_hide: false },
-        'phone' : { label: 'Phone', search: true, column_hide: true },
+        'id': { label: 'Id', search: true, column_hide: true, disable: false },
+        'name': { label: 'Name', search: true, column_hide: true, disable: false },
+        'phone': { label: 'Phone', search: true, column_hide: true, disable: false },
+        'action': { label: 'Action', search: false, column_hide: true, disable: true },
     }
 
     return <>
+        <DeleteModal clickHandel={itemDelete} />
+
         <div>
             <div className="content-wrapper">
                 <section className="content-header">
@@ -94,7 +125,6 @@ export default function Index() {
                     </div>
                 </section>
 
-                <button onClick={() => setHideDirector(!hideDirector)}>Hide Directory Column</button>
                 <DataList columns={columns} data={allData} multipleDeleteManage={true} search_columns_name={search_columns_name} search_and_hide_columns={search_and_hide_columns} />
             </div>
         </div>

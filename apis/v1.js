@@ -18,5 +18,10 @@ export default {
  // admins
  async admins(){
    return axios.get(`/admins`)
+ },
+
+ async deleteItems(endPoint, ids){
+   console.log(ids, 'fghgggggggggg');
+   // return axios.post(`${endPoint}`, ids)
  }
 }
