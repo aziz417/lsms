@@ -1,19 +1,19 @@
-import Link from 'next/link'
 import { useEffect, useState } from 'react';
 import CustomLink from '../../components/Buttons/CustomLink'
 import DataList from '../../components/Datatable/DataList';
 import Admin from "../../layouts/Admin.js";
 import api from "../../apis/v1"
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { toast } from 'react-toastify';
 import CustomButton from '../../components/Buttons/CustomButton';
-import { differenceBy } from '../../halpers/helper';
 import DeleteModal from '../../components/Modals/DeleteModal';
 
 
-
 export default function Index() {
+    const router = useRouter()
+
     const [allData, setAllData] = useState([]);
-    const [hideDirector, setHideDirector] = useState(false);
     const [itemDeleteId, setItemDeleteId] = useState();
 
 
@@ -52,6 +52,10 @@ export default function Index() {
 
     }
 
+    const goToEdit = (id) => {
+        router.push(`admins/edit-${id}`)
+    }
+
     const columns = [
         {
             name: 'Id',
@@ -83,13 +87,30 @@ export default function Index() {
                     classes="btn-sm btn-success btn m-1"
                     icon="fa fa-eye"
                 />
-                <CustomButton
-                    type="button"
-                    classes="btn-sm btn-primary btn m-2"
-                    icon="fa fa-pen mr-1"
-                />
 
-                <button type='button' onClick={() => setItemDeleteId(row.id)} data-toggle="modal" data-target="#my-modal" className='btn-sm btn-danger btn m-1'><i className='fa fa-trash'></i></button>
+                {/* <Link
+                    className='btn-sm btn-primary btn m-2'
+                    href={`/admins/${row.id}-edit`}>
+                    <i className='fa fa-pen mr-1'></i>
+
+                </Link> */}
+                <button
+                    type='button'
+                    onClick={() => goToEdit(row.id)}
+                    className='btn-sm btn-primary btn m-2'
+                >
+                    <i className='fa fa-pen mr-1'></i>
+                </button>
+
+                <button
+                    type='button'
+                    onClick={() => setItemDeleteId(pre => row.id)}
+                    data-toggle="modal"
+                    data-target="#my-modal-single"
+                    className='btn-sm btn-danger btn m-1'
+                >
+                    <i className='fa fa-trash'></i>
+                </button>
                 {/* <CustomButton
                     type="button"
                     classes="btn-sm btn-danger btn m-1"
@@ -101,7 +122,6 @@ export default function Index() {
 
     ];
 
-    const search_columns_name = ['name', 'phone']
 
     const search_and_hide_columns = {
         'id': { label: 'Id', search: true, column_hide: true, disable: false },
@@ -125,7 +145,7 @@ export default function Index() {
                     </div>
                 </section>
 
-                <DataList columns={columns} data={allData} multipleDeleteManage={true} search_columns_name={search_columns_name} search_and_hide_columns={search_and_hide_columns} />
+                <DataList columns={columns} data={allData} multipleDeleteManage={true} search_and_hide_columns={search_and_hide_columns} />
             </div>
         </div>
     </>

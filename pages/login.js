@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 
 export default function Login() {
-    const [fromInputs, setFromInputs] = useState({ email: 'az@g.com', password: '12345678' });
+    const [fromInputs, setFromInputs] = useState({ email_or_phone: 'az@g.com', password: '12345678' });
     const [serverMessage, setServerMessage] = useState(false);
 
     const router = useRouter();
@@ -28,12 +28,12 @@ export default function Login() {
 
         try {
             const { data } = await api.login(fromInputs);
-
-            if (data.status_code === 200) {
+            if (data.status_code == 200) {
                 localStorage.setItem("token", data?.data?.access_token)
+                localStorage.setItem("auth_user_id", data.data.user.id)
 
                 toast.success(data?.message)
-                router.push('/')
+                // router.push('/')
             } else {
                 toast.warning(data?.message)
 
@@ -52,20 +52,20 @@ export default function Login() {
                 <div className="d-flex justify-content-center align-items-center login-box" style={{ height: "100vh" }}>
 
                     {/* /.login-logo */}
-                    <div className="card loginAndRegistrationForm">
+                    <div className="card loginAndRegistrationForm model-box-shadow">
                         <div className="card-body login-card-body">
                             <p className="login-box-msg">Sign in to start your session</p>
                             <form onSubmit={fromSubmit} method="post">
 
                                 <InputField
-                                    label="Email"
+                                    label="Email Or Phone"
                                     eventHandel={fromData}
-                                    name="email"
-                                    help="Must be valid email"
+                                    name="email_or_phone"
+                                    help="Must be valid email or phone"
                                     required={true}
-                                    type="email"
-                                    value={fromInputs.email}
-                                    placeholder="Enter Your Email"
+                                    type="text"
+                                    value={fromInputs.email_or_phone}
+                                    placeholder="Enter Your Email Or Phone"
                                     anyMessage={serverMessage}
                                 />
 
@@ -104,12 +104,17 @@ export default function Login() {
                                 </a>
                             </div> */}
                             {/* /.social-auth-links */}
-                            <div className='d-flex justify-content-between align-items-center mt-2'>
-                                <p className="mb-1">
+                            <div className=' mt-2'>
+                                <p className="mb-1 text-center my-2">
                                     <a href="forgot-password.html">Forgot password</a>
                                 </p>
-                                <p className="mb-0">
-                                    <Link href="/register" className="text-center">Register Now</Link>
+                                <div className="dropdown-divider my-4" />
+                                <p>Register if you don't have an account!</p>
+                                <p className="mb-0 d-flex justify-content-between align-items-center">
+                                    <Link href="/consultancy-register" className="text-center">Consultancy Register</Link>
+
+                                    <Link href="/citizen-register" className="text-center">Citizen Register</Link>
+
                                 </p>
                             </div>
 

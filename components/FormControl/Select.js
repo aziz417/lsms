@@ -11,8 +11,8 @@ const Select = (props) => {
     ]
 
     const onChangeEvent = (e) => {
-        if (props.onChangeHandel) {
-            props.onChangeHandel(e)
+        if (props.eventHandel) {
+            props.eventHandel(e)
         }
     }
 

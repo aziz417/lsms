@@ -13,9 +13,9 @@ export default function Header() {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (!token || token === 'null') {
-            router.push('/login')
-        }
+        // if (!token || token === 'null') {
+        //     router.push('/login')
+        // }
     }, [])
 
     const logout = async (e) => {
@@ -99,9 +99,9 @@ export default function Header() {
                     </a>
                     <div className="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <div className="dropdown-divider" />
-                        <a href="#" className="dropdown-item">
+                        <Link href="/profile" className="dropdown-item">
                             <i className="fas fa-envelope mr-2" />Profile
-                        </a>
+                        </Link>
                         < div className="dropdown-divider" />
                         <a href="#" className="dropdown-item">
                             <i className="fas fa-users mr-2" />Setting</a>

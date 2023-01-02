@@ -4,10 +4,12 @@ import api from '../../apis/v1'
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import CustomButton from "../../components/Buttons/CustomButton.js";
+import { useRouter } from 'next/router'
 
 export default function From() {
     const [fromInputs, setFromInputs] = useState({ password: '', phone: "", name: '' });
     const [serverMessage, setServerMessage] = useState(false);
+    const router = useRouter()
 
     const fromData = (e) => {
         const { name, value } = e.target;
@@ -42,7 +44,6 @@ export default function From() {
         } catch (e) {
             setServerMessage(e.response?.data?.errors)
         }
-
     }
 
     return (
@@ -51,8 +52,8 @@ export default function From() {
             <section className="content-header">
                 <div className="container-fluid">
 
-                    <div className="d-flex justify-content-center">
-                        <div className="lg:w-50 md:w-75 w-100">
+                    <div className="d-flex justify-content-start">
+                        <div className="col-sm-6 col-12">
                             <div className="container-fluid">
                                 <div className=" d-flex justify-content-between align-items-center">
                                     <h3 className='fs-md fs-sm fs-xs'>New Admin Register</h3>

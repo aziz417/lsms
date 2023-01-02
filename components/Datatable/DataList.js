@@ -2,6 +2,7 @@ import DataTable from 'react-data-table-component';
 import { useState, useMemo, useCallback, useEffect, use } from 'react';
 import DeleteModalMultiple from '../Modals/DeleteModalMultiple.js';
 import { differenceBy } from '../../halpers/helper';
+import { toast } from 'react-toastify';
 import api from '../../apis/v1.js'
 
 export default function DataList(props) {
@@ -46,31 +47,25 @@ export default function DataList(props) {
 
     const handleRowSelected = useCallback(state => {
         setSelectedRows(state.selectedRows);
-        // state.selectedRows.length > 1 ? setMultipleDelete(true) : setMultipleDelete(false)
+        setMultipleDelete(!multipleDelete)
+
     }, []);
 
-
-    const itemDeleteLL = (type) => {
-
-        console.log(type, 'fffffffffffff');
-        // let deleteAllItems = selectedRows.map(item => item.id);
-
-        // selectedRows.length > 0 ? setMultipleDeleteItems(() => ) : setMultipleDeleteItems([])
-
+    const itemDeleteLL = async (type) => {
 
         if (type == 'delete') {
-
             try {
+                const deleteIdes = selectedRows.map(item => item.id);
 
+                const response = await api.deleteItems('/admins/delete', deleteIdes)
 
-                // const { data } = await  api.deleteItems('/admins/delete', [multipleDeleteItems])
-                // if (data?.status_code === 200) {
-                //     toast.success(data.message)
-                //     setToggleCleared(!toggleCleared);
-                //     setData(differenceBy(data, selectedRows, 'id'));
-                //     setMultipleDelete(!multipleDelete)
-                // }
-
+                if (response.data?.status_code === 200) {
+                    toast.success(response.data?.message)
+                    setToggleCleared(!toggleCleared);
+                    // console.log(data, selectedRows);
+                    setData(pre => differenceBy(data, selectedRows, 'id'));
+                    setMultipleDelete(!multipleDelete)
+                }
             } catch (e) {
                 // toast.warning(e)
             }
@@ -81,8 +76,6 @@ export default function DataList(props) {
             setMultipleDelete(!multipleDelete)
         }
     }
-
-
 
     const setting = (type, clm) => {
         let search_hide_new_obj = {};
@@ -161,7 +154,7 @@ export default function DataList(props) {
                     <div className='d-flex justify-content-end'>
                         {
                             selectedRows.length > 1 && multipleDelete ?
-                                <button className="btn btn-danger float-right" data-toggle="modal" data-target="#my-modal">
+                                <button className="btn btn-danger float-right" data-toggle="modal" data-target="#my-modal-multi">
                                     <i className='fa fa-trash' /></button>
                                 : ''
                         }

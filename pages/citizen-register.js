@@ -4,8 +4,54 @@ import styles from '../styles/Home.module.css'
 import Auth from "../layouts/Auth.js";
 import InputField from '../components/FormControl/InputField';
 import CustomButton from '../components/Buttons/CustomButton';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import api from '../apis/v1.js'
+import { ucFirst } from '../halpers/helper';
 
-export default function Register() {
+export default function CitizenRegister() {
+
+    const [fromInputs, setFromInputs] = useState({ password: '', phone: "", name: '', type: 'citizen' });
+    const [serverMessage, setServerMessage] = useState(false);
+
+    const fromData = (e) => {
+        const { name, value } = e.target;
+
+        setFromInputs(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
+
+    const fromSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const { data } = await api.register(fromInputs);
+
+            if (data.status_code === 200 || data.status_code === 201) {
+                toast.success(ucFirst(data?.message))
+                setServerMessage(false)
+
+                Object.keys(fromInputs)?.map((name) => {
+                    setFromInputs(prevState => ({
+                        ...prevState,
+                        [name]: ''
+                    }));
+                })
+
+                router.push('/login')
+            } else {
+                toast.warning(data?.message)
+            }
+
+        } catch (e) {
+            setServerMessage(e.response?.data?.errors)
+        }
+    }
+
+
+
     const phoneNumber = (event) => {
 
         const number = event.target.value;
@@ -17,58 +63,45 @@ export default function Register() {
     return (
         <>
             <div className="d-flex justify-content-center align-items-center">
-                <div className="card loginAndRegistrationForm my-5">
+                <div className="card loginAndRegistrationForm my-5 model-box-shadow">
                     <div className="card-body login-card-body">
-                        <p className="login-box-msg">Register a new membership</p>
-                        <form action="../../index3.html" method="post">
+                        <h3 className="login-box-msg">Citizen Registration</h3>
+                         <form onSubmit={fromSubmit} method="post">
                             <InputField
-                                label="First Name"
-                                name="first_name"
-                                help="Type Your First Name"
+                                label="Name"
+                                name="name"
+                                eventHandel={fromData}
+                                value={fromInputs.name}
+                                help="Type Your Name"
                                 required={true}
                                 type="text"
-                                placeholder="Enter Your First Name"
+                                placeholder="Enter Your Name"
                                 maxL="30"
                             />
-                            <InputField
-                                label="Last Name"
-                                name="last_name"
-                                help="Type Your Last Name"
-                                required={true}
-                                type="text"
-                                placeholder="Enter Your Last Name"
-                                maxL="30"
-                            />
-
+                           
                             <InputField
                                 label="Phone"
                                 name="phone"
+                                eventHandel={fromData}
+                                value={fromInputs.phone}
                                 help="Type Your Phone"
                                 required={true}
                                 type="text"
                                 placeholder="Enter Your Phone"
-                                eventHandel={phoneNumber}
                                 maxL="11"
                             />
 
-                            <InputField
-                                label="Email"
-                                name="email"
-                                help="must be contain @"
-                                required={true}
-                                type="email"
-                                placeholder="Enter Your Email"
-                            />
 
                             <InputField
                                 label="Password"
                                 name="password"
                                 help="password must be contain 8"
                                 required={true}
+                                eventHandel={fromData}
+                                value={fromInputs.password}
                                 type="password"
                                 placeholder="Enter Your Password"
                             />
-
 
                             <div className="row">
                                 {/* /.col */}
@@ -91,4 +124,4 @@ export default function Register() {
     )
 }
 
-Register.layout = Auth;
+CitizenRegister.layout = Auth;

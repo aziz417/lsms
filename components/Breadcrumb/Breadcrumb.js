@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { capitalizeFirst, convertToSlug, ucFirst } from "../../halpers/helper"
+import { capitalizeFirst, convertToSlug, isInDesiredForm, ucFirst } from "../../halpers/helper"
 import React, { useState } from 'react';
 
 
@@ -15,6 +15,14 @@ export default function Breadcrumb(props) {
 
         {props.parameters?.map((parameter, index) => {
             if (Number.isInteger(parameter) == false && parameter) {
+
+                const strArray = parameter.split("-")
+                const isInteger = isInDesiredForm(strArray[1]);
+
+                if (isInteger) {
+                    parameter = strArray[0];
+                }
+
                 return (
                     <li
                         key={index}
@@ -30,7 +38,7 @@ export default function Breadcrumb(props) {
             }
         })}
 
-       
+
         <li className="nav-item dropdown breadcumb-show-hide">
             <a className="nav-link"
                 data-toggle="dropdown" href="#">

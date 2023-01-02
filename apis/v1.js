@@ -1,27 +1,33 @@
 import axios from "../axios.js"
 export default {
-
-
    // authintation
- async login(fromData){
-    return axios.post(`/login`, fromData)
- },
+   async register(fromData) {
+      return axios.post(`/register`, fromData)
+   },
 
- async adminRegister(fromData){
-    return axios.post(`/register`, fromData)
- },
+   async login(fromData) {
+      return axios.post(`/login`, fromData)
+   },
 
- async logout(){
-    return axios.post(`/logout`)
- },
+   async profileApi(){
+      const id = localStorage.getItem('auth_user_id')
+      return axios.get(`/profile/${id}`)
+   },
 
- // admins
- async admins(){
-   return axios.get(`/admins`)
- },
+   async adminRegister(fromData) {
+      return axios.post(`/register`, fromData)
+   },
 
- async deleteItems(endPoint, ids){
-   console.log(ids, 'fghgggggggggg');
-   // return axios.post(`${endPoint}`, ids)
- }
+   async logout() {
+      return axios.post(`/logout`)
+   },
+
+   // admins
+   async admins() {
+      return axios.get(`/admins`)
+   },
+
+   async deleteItems(endPoint, ids) {
+      return axios.post(`${endPoint}`, ids)
+   }
 }
