@@ -14,6 +14,10 @@ export default {
       return axios.get(`/profile/${id}`)
    },
 
+   async profileUpdate(fromData){
+      return axios.post(`/profile/update`, fromData)
+   },
+
    async adminRegister(fromData) {
       return axios.post(`/register`, fromData)
    },

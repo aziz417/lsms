@@ -3,13 +3,7 @@ import { ucFirst } from '../../halpers/helper';
 
 
 const Select = (props) => {
-    const optionsd = [
-        { value: "vc1", label: "f" },
-        { value: "vcr", label: "d" },
-        { value: "f", label: "s" },
-        { value: "vcd", label: "fgrg" },
-    ]
-
+   
     const onChangeEvent = (e) => {
         if (props.eventHandel) {
             props.eventHandel(e)
@@ -19,11 +13,11 @@ const Select = (props) => {
     return <>
         <div className="form-group">
             <label className="capitalize" htmlFor={props.id}>{props.lavel}
-                <span className="text-danger">{props.required == 'true' ? '*' : ''}</span>
+                <span className="text-danger">{props.required == true ? '*' : ''}</span>
             </label>
 
             <Select2
-                onChange={onChangeEvent}
+                onChange={(e) => onChangeEvent(e)}
                 options={props.options}
                 placeholder={ucFirst(props.placeholder)}
                 name={props.name}

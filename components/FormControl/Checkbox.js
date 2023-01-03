@@ -18,7 +18,7 @@ export default function Checkbox(props) {
             <input
                 required={props.required}
                 type="checkbox"
-                id="checkboxSuccess1"
+                id={props.name}
                 checked={isChecked}
                 value={props.value}
                 name={props.name}

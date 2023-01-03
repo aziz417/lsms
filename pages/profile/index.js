@@ -75,7 +75,7 @@ export default function Index() {
                             <CustomLink
                                 classes="float-right btn-sm btn-success"
                                 title="Update Profile"
-                                url={`/profile/update` + `${profile?.id}`} />
+                                url={`/profile/update-` + `${profile?.id}`} />
                         </div>
                     </div>
                     <div className="row">

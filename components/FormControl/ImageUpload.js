@@ -9,9 +9,10 @@ export default function ImageUpload(props) {
 
 
     const upload = (event) => {
-        console.log(event.target.files[0].size);
-
-        if (event.target.files[0].size <= props.size * 10000) {
+        const file = event.target.files[0];
+        const fileSize = ((file.size / 1024) / 1024).toFixed(2)
+        
+        if (fileSize < props.size) {
             if (props.onChangeHandel) {
                 props.onChangeHandel(event)
             }
@@ -23,8 +24,17 @@ export default function ImageUpload(props) {
     }
 
     return <>
-        <div className="form-group mt-3">
-            <label htmlFor="exampleInputFile">{props.label}</label>
+        <div className="form-group">
+        <label htmlFor={props.name}>
+                {props.label}
+                <span className="text-danger">
+                    {props.required == true ? '*' : ''}
+                </span>
+            </label>
+            
+            <br/>
+            <span className="text-danger fs-10">{props.anyMessage?.[props.name]?.[0]}</span>
+
             <div>
                 <span className="text-xs text-danger">{imageSizeMaxWarning ?? ''}</span>
             </div>
@@ -36,8 +46,10 @@ export default function ImageUpload(props) {
                         type="file"
                         accept={props.accept ?? 'image/*'}
                         className="custom-file-input"
-                        id="exampleInputFile"
+                        id={props.name}
                         onChange={(e) => (upload(e))}
+                        required={props.required}
+                        name={props.name}
                     />
 
                     <label className="custom-file-label" htmlFor="exampleInputFile">Choose Image</label>
