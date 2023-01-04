@@ -39,6 +39,11 @@ export default function Header() {
         }
     }
 
+    const changePassword = () => {
+        router.push('/profile/change-password')
+
+    }
+
     const parameters = router.asPath.split("/").slice(1)
 
     return <>
@@ -106,9 +111,9 @@ export default function Header() {
                         <a href="#" className="dropdown-item">
                             <i className="fas fa-users mr-2" />Setting</a>
                         <div className="dropdown-divider" />
-                        <a href="#" className="dropdown-item">
+                        <Link onClick={changePassword} href="#" className="dropdown-item">
                             <i className="fas fa-file mr-2" />Password Change
-                        </a>
+                        </Link>
                         <div className="dropdown-divider" />
 
                         <Link href="#"

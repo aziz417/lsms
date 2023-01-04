@@ -3,15 +3,16 @@ import { capitalizeFirst, convertToSlug, ucFirst } from "../../halpers/helper"
 
 
 export default function Checkbox(props) {
-    const [isChecked, setIsChecked] = useState(true);
+    const [isChecked, setIsChecked] = useState('');
 
     useEffect(() => {
         setIsChecked(props.checked)
-    }, [])
+    }, [props])
 
     const checkEvent = (e) => {
         props.onChangeEvent ? props.onChangeEvent(e) : '';
     }
+
 
     return <>
         <div className="icheck-success d-inline">
@@ -20,7 +21,7 @@ export default function Checkbox(props) {
                 type="checkbox"
                 id={props.name}
                 checked={isChecked}
-                value={props.value}
+                // value={props.value}
                 name={props.name}
                 onChange={(e) => {
                     setIsChecked(!isChecked)

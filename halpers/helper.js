@@ -40,7 +40,7 @@ export const isInDesiredForm = (str) => {
         }
         str = str.replace(/^0+/, "") || "0";
         var n = Math.floor(Number(str));
-        
+
         if (n !== Infinity && String(n) === str && n >= 0) {
             return n
         } else {
@@ -49,5 +49,23 @@ export const isInDesiredForm = (str) => {
     } else {
         return false
     }
+}
+
+export const getBase64 = (file) => {
+
+    return new Promise(resolve => {
+        let baseURL = "";
+        // Make new FileReader
+        let reader = new FileReader();
+
+        // Convert the file to base64 text
+        reader.readAsDataURL(file);
+
+        reader.onload = () => {
+            baseURL = reader.result;
+            resolve(baseURL);
+        };
+    });
+
 
 }

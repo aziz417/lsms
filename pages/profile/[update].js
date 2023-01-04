@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import Select from "../../components/FormControl/Select.js";
 import ImageUpload from "../../components/FormControl/ImageUpload.js";
 import Checkbox from "../../components/FormControl/Checkbox.js";
+import { getBase64, ucFirst } from "../../halpers/helper.js";
 
 export default function From() {
     const [fromInputs, setFromInputs] = useState({
@@ -23,25 +24,183 @@ export default function From() {
         // status: '',
         // address: '',
     });
+
+    const [experianceItems, setExperianceItems] = useState([{
+        designation: '',
+        institute_name: '',
+        department: '',
+        start_date: '',
+        end_date: '',
+        current: ''
+    }]);
+
+    const [accademicItems, setAccademicItems] = useState([{
+        education_level: '',
+        institute_name: '',
+        passing_year: '',
+        caertificate: ''
+    }]);
+
     const [serverMessage, setServerMessage] = useState(false);
 
     const router = useRouter()
 
-    const [profile, setProfile] = useState([]);
+    useEffect(() => {
+        const me = async () => {
+            const { data } = await api.profileApi();
+            setFromInputs(pre => data?.data)
+            // if (data?.data?.type !== 'citizen') {
+            //     setExperianceItems(pre => data?.data?.experiances)
+            //     setAccademicItems(pre => data?.data?.accademics)
+            // }
+        }
 
-    // useEffect(() => {
-    //     const me = async () => {
-    //         const { data } = await api.profileApi();
-    //         setFromInputs(pre => data?.data)
-    //     }
+        me();
+    }, [])
 
-    //     me();
 
-    // }, [])
+    const options = [
+        { label: 'Male', id: 'male' },
+        { label: 'Female', id: 'female' },
+        { label: 'Other', id: 'other' },
+    ]
+
+    const profileUpload = (e) => {
+        getBase64(e.target.files[0])
+            .then(result => {
+                setFromInputs(prevState => ({
+                    ...prevState,
+                    ['profile_image']: result
+                }));
+            })
+            .catch(err => {
+                // console.log(err);
+            });
+    }
+
+
+    const nidFrontUpload = (e) => {
+        getBase64(e.target.files[0])
+            .then(result => {
+                setFromInputs(prevState => ({
+                    ...prevState,
+                    ['nid_front']: result
+                }));
+            })
+            .catch(err => {
+                // console.log(err);
+            });
+    }
+
+    const nidBackUpload = (e) => {
+        getBase64(e.target.files[0])
+            .then(result => {
+                setFromInputs(prevState => ({
+                    ...prevState,
+                    ['nid_back']: result
+                }));
+            })
+            .catch(err => {
+                // console.log(err);
+            });
+    }
+
+    const phoneNumber = (event) => {
+
+        const number = event.target.value;
+        if (!number.match(/^[0-9]+$/) || number.toString().length > 11) {
+            fromInputs.phone = number.substring(0, number.length - 1);
+        }
+    }
+
+    const statusCheck = (e) => {
+        const { name, checked } = e.target;
+        let ckd = checked === true ? 1 : 0
+        setFromInputs(prevState => ({
+            ...prevState,
+            [name]: ckd
+        }));
+    }
+
+    const selectEvent = (e) => {
+        const { id } = e;
+        setFromInputs(prevState => ({
+            ...prevState,
+            ['gender']: id
+        }));
+    }
+
+    const addNewAccademic = () => {
+        let newObject = {
+            education_level: '',
+            institute_name: '',
+            passing_year: '',
+            caertificate: ''
+        }
+        setAccademicItems([...accademicItems, newObject])
+    }
+
+    const accademicItemManage = (index, event) => {
+        let data = [...accademicItems];
+        data[index][event.target.name] = event.target.value;
+        setAccademicItems(data);
+    }
+
+    const removeAccademicFields = (index) => {
+        let data = [...accademicItems];
+        data.splice(index, 1)
+        setAccademicItems(data)
+    }
+
+    const caertificateImage = (index, e) => {
+        let data = [...accademicItems];
+        // data[index][event.target.name] = event.target.files[0];
+        // setAccademicItems(data);
+
+        getBase64(e.target.files[0])
+            .then(result => {
+                data[index][e.target.name] = result;
+                setAccademicItems(data);
+                // data[index][event.target.name] = event.target.files[0];
+            })
+            .catch(err => {
+                // console.log(err);
+            });
+    }
+
+    // experiance
+    const addNewExperiance = () => {
+        let newObject = {
+            designation: '',
+            institute_name: '',
+            department: '',
+            start_date: '',
+            end_date: '',
+            current: ''
+        }
+        setExperianceItems([...experianceItems, newObject])
+    }
+
+    const experianceItemManage = (index, event) => {
+        let data = [...experianceItems];
+        data[index][event.target.name] = event.target.value;
+        setExperianceItems(data);
+    }
+
+    // const experianceCurrent = (index, event) => {
+    //     let data = [...experianceItems];
+    //     data[index][event.target.name] = event.target.checked;
+    //     setExperianceItems(data);
+    // }
+
+    const removeExperianceFields = (index) => {
+        let data = [...experianceItems];
+        data.splice(index, 1)
+        setExperianceItems(data)
+    }
 
     const fromData = (e) => {
         const { name, value } = e.target;
-
         setFromInputs(prevState => ({
             ...prevState,
             [name]: value
@@ -51,18 +210,18 @@ export default function From() {
     const fromSubmit = async (e) => {
         e.preventDefault();
 
-        const formEl = document.forms.storeForm;
-        const formData = new FormData(formEl);
-
-        // console.log(formData.getAll());
+        if (fromInputs.type !== 'citizen') {
+            Object.assign(fromInputs, { accademics: accademicItems })
+            Object.assign(fromInputs, { experiances: experianceItems })
+        }
+        console.log(fromInputs, 'beforeapicall');
 
         try {
-            const { data } = await api.profileUpdate(formData);
-
-            console.log(data, 'ffffffffff');
+            const { data } = await api.profileUpdate(fromInputs);
+            console.log(data, 'afterapicall');
 
             if (data.status_code === 200 || data.status_code === 201) {
-                toast.success(data?.message)
+                toast.success(ucFirst(data?.message))
                 setServerMessage(false)
 
                 // Object.keys(fromInputs)?.map((name) => {
@@ -81,80 +240,6 @@ export default function From() {
         }
     }
 
-    const options = [
-        { label: 'Male', id: 'male' },
-        { label: 'Female', id: 'female' },
-        { label: 'Other', id: 'other' },
-    ]
-
-    const profileUpload = (e) => {
-
-        setFromInputs(prevState => ({
-            ...prevState,
-            ['profile_image']: e.target.files[0]
-        }));
-
-    }
-
-    const nidFrontUpload = (e) => {
-
-        setFromInputs(prevState => ({
-            ...prevState,
-            ['nid_front']: e.target.files[0]
-        }));
-
-    }
-
-    const nidBackUpload = (e) => {
-
-        setFromInputs(prevState => ({
-            ...prevState,
-            ['nid_back']: e.target.files[0]
-        }));
-
-    }
-
-    const phoneNumber = (event) => {
-
-        const number = event.target.value;
-        if (!number.match(/^[0-9]+$/) || number.toString().length > 11) {
-            fromInputs.phone = number.substring(0, number.length - 1);
-        }
-    }
-
-    const statusCheck = (e) => {
-        const { name, checked } = e.target;
-        setFromInputs(prevState => ({
-            ...prevState,
-            [name]: checked
-        }));
-    }
-
-    const selectEvent = (e) => {
-        const { id } = e;
-        setFromInputs(prevState => ({
-            ...prevState,
-            ['gander']: id
-        }));
-    }
-
-    const [accademicItems, setAccademicItems] = useState([1]);
-    const [expericanceItems, setExpericanceItems] = useState([1]);
-
-    // const nidValidate = (e) => {
-    //     console.log(e);
-    //     // console.log(e.target.value);
-    // }
-    // console.log(fromInputs);
-
-    const testDD = (e) => {
-        console.log(e);
-    }
-    const addNewAccademic = (index) => {
-        setAccademicItems(pre => [...accademicItems, index])
-    }
-    console.log(accademicItems);
-
     return (
 
         <div className="content-wrapper">
@@ -165,7 +250,7 @@ export default function From() {
                         <div className="col-12">
                             <div className="container-fluid">
                                 <div className=" d-flex justify-content-between align-items-center">
-                                    <h3 className='fs-md fs-sm fs-xs'>New Admin Register</h3>
+                                    <h3 className='fs-md fs-sm fs-xs'>Update Profile</h3>
                                 </div>
                             </div>
 
@@ -264,14 +349,14 @@ export default function From() {
 
                                             <div className="col-md-4 col-12">
                                                 <Select
-                                                    placeholder="Select gander"
-                                                    name="gander"
+                                                    placeholder="Select gender"
+                                                    name="gender"
                                                     eventHandel={selectEvent}
-                                                    lavel="Select Gander"
+                                                    lavel="Select Gender"
                                                     options={options}
                                                     required={true}
-                                                    id="profileGander"
-                                                    help="select gander"
+                                                    id="profileGender"
+                                                    help="select gender"
                                                     anyMessage={serverMessage}
                                                 />
                                             </div>
@@ -305,9 +390,9 @@ export default function From() {
 
                                             <div className="col-md-4 col-12 mt-4">
                                                 <Checkbox
-                                                    checked={false}
+                                                    checked={fromInputs?.status == '1' ? true : false}
                                                     onChangeEvent={statusCheck}
-                                                    value={false}
+                                                    // value={fromInputs?.status == '1' ? true : false}
                                                     label="status"
                                                     help="please seletct"
                                                     required={true}
@@ -361,80 +446,220 @@ export default function From() {
                                             </> : ''}
                                         </div>
 
-                                        {'consultant' === 'consultant' ? <>
+                                        {fromInputs.type === 'consultant' ? <>
                                             <div className="dropdown-divider my-4" />
                                             <h5>Academic Information: </h5>
-                                            
-                                                {expericanceItems?.map((index) => {
-                                                    return (
-                                                        <div  className="row" key={index}>
-                                                            <div className="col-sm-2 col-12">
-                                                                <InputField
-                                                                    label="Education Level"
-                                                                    eventHandel={testDD}
-                                                                    name="education_level[]"
-                                                                    // help="Your current profession"
-                                                                    required={true}
-                                                                    // value={fromInputs.current_profession}
-                                                                    type="text"
-                                                                    placeholder="Enter your education level"
-                                                                    anyMessage={serverMessage}
-                                                                />
-                                                            </div>
 
-                                                            <div className="col-sm-2 col-12">
-                                                                <InputField
-                                                                    label="Institute Name"
-                                                                    eventHandel={testDD}
-                                                                    name="institute_name[]"
-                                                                    // help="Your current profession"
-                                                                    required={true}
-                                                                    // value={fromInputs.current_profession}
-                                                                    type="text"
-                                                                    placeholder="Enter your institute name"
-                                                                    anyMessage={serverMessage}
-                                                                />
-                                                            </div>
+                                            {accademicItems?.map((input, index) => {
+                                                return (
+                                                    <div className="row" key={index}>
+                                                        <div className="col-sm-2 col-12">
+                                                            <InputField
+                                                                label="Education Level"
+                                                                eventHandel={e => accademicItemManage(index, event)}
+                                                                name="education_level"
+                                                                // help="Your current profession"
+                                                                required={true}
+                                                                value={input.education_level}
+                                                                type="text"
+                                                                placeholder="Enter your education level"
+                                                                anyMessage={serverMessage}
+                                                            />
+                                                        </div>
 
-                                                            <div className="col-sm-2 col-12">
-                                                                <InputField
-                                                                    label="Passing Year"
-                                                                    eventHandel={testDD}
-                                                                    name="passing_year[]"
-                                                                    // help="Your current profession"
-                                                                    required={true}
-                                                                    // value={fromInputs.current_profession}
-                                                                    type="date"
-                                                                    placeholder="Enter your passing year"
-                                                                    anyMessage={serverMessage}
-                                                                />
-                                                            </div>
+                                                        <div className="col-sm-2 col-12">
+                                                            <InputField
+                                                                label="Institute Name"
+                                                                eventHandel={e => accademicItemManage(index, event)}
+                                                                name="institute_name"
+                                                                // help="Your current profession"
+                                                                required={true}
+                                                                value={input.institute_name}
+                                                                type="text"
+                                                                placeholder="Enter your institute name"
+                                                                anyMessage={serverMessage}
+                                                            />
+                                                        </div>
 
-                                                            <div className="col-md-4 col-12">
-                                                                <ImageUpload
-                                                                    label="Certificate"
-                                                                    name="caertificate[]"
-                                                                    accept=".jpg, .jpeg, .png"
-                                                                    // help="Set as a your nid front image"
-                                                                    size="2"
-                                                                    onChangeHandel={nidFrontUpload}
-                                                                    required={true}
-                                                                    anyMessage={serverMessage}
-                                                                />
-                                                            </div>
+                                                        <div className="col-sm-2 col-12">
+                                                            <InputField
+                                                                label="Passing Year"
+                                                                eventHandel={e => accademicItemManage(index, event)}
+                                                                name="passing_year"
+                                                                // help="Your current profession"
+                                                                required={true}
+                                                                value={input.passing_year}
+                                                                type="date"
+                                                                placeholder="Enter your passing year"
+                                                                anyMessage={serverMessage}
+                                                            />
+                                                        </div>
 
-                                                            <div className="col-md-2 col-12" style={{ marginTop: '32px' }}>
+                                                        <div className="col-md-4 col-12">
+                                                            <ImageUpload
+                                                                label="Certificate"
+                                                                name="caertificate"
+                                                                accept=".jpg, .jpeg, .png"
+                                                                // help="Set as a your nid front image"
+                                                                size="2"
+                                                                onChangeHandel={e => caertificateImage(index, e)}
+                                                                required={true}
+                                                                anyMessage={serverMessage}
+                                                            />
+                                                        </div>
+
+                                                        <div className="col-md-2 col-12" style={{ marginTop: '32px' }}>
+                                                            {index !== 0 ?
                                                                 <button
                                                                     type="button"
-                                                                    className="btn btn-success btn-lg btn-block"
-                                                                  onClick={() => addNewAccademic(++index)}
+                                                                    className="btn btn-danger"
+                                                                    onClick={() => removeAccademicFields(index)}
                                                                 >
-                                                                    <i className="fa fa-plus"></i> Add
+                                                                    <i className="fa fa-minus"></i>
                                                                 </button>
-                                                            </div>
+                                                                : ''}
+                                                            {index === 0 ?
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-success"
+                                                                    onClick={addNewAccademic}
+                                                                >
+                                                                    <i className="fa fa-plus"></i>
+                                                                </button>
+                                                                : ''}
                                                         </div>
-                                                    )
-                                                })}
+                                                    </div>
+                                                )
+                                            })}
+
+
+                                        </> : ''}
+
+                                        {fromInputs.type === 'consultant' ? <>
+                                            <div className="dropdown-divider my-4" />
+                                            <h5>Experiance Information: </h5>
+                                            <div className="row">
+                                                <div className="col-md-4 col-12">
+                                                    <InputField
+                                                        label="Years of experiance"
+                                                        eventHandel={fromData}
+                                                        name="years_of_experience"
+                                                        // help="Type your years of experience"
+                                                        required={true}
+                                                        type="text"
+                                                        value={fromInputs.years_of_experience}
+                                                        placeholder="Enter your years of experience"
+                                                        anyMessage={serverMessage}
+                                                    />
+                                                </div>
+                                            </div>
+                                            {experianceItems?.map((input, index) => {
+                                                return (
+                                                    <div className="row" key={index}>
+                                                        <div className="col-sm-2 col-12">
+                                                            <InputField
+                                                                label="Institute Name"
+                                                                eventHandel={e => experianceItemManage(index, event)}
+                                                                name="institute_name"
+                                                                // help="Your current profession"
+                                                                required={true}
+                                                                value={input.institute_name}
+                                                                type="text"
+                                                                placeholder="Enter your institute name"
+                                                                anyMessage={serverMessage}
+                                                            />
+                                                        </div>
+
+                                                        <div className="col-sm-2 col-12">
+                                                            <InputField
+                                                                label="Designation"
+                                                                eventHandel={e => experianceItemManage(index, event)}
+                                                                name="designation"
+                                                                // help="Your current profession"
+                                                                required={true}
+                                                                value={input.designation}
+                                                                type="text"
+                                                                placeholder="Enter your designation"
+                                                                anyMessage={serverMessage}
+                                                            />
+                                                        </div>
+
+                                                        <div className="col-sm-2 col-12">
+                                                            <InputField
+                                                                label="Department"
+                                                                eventHandel={e => experianceItemManage(index, event)}
+                                                                name="department"
+                                                                // help="Your current profession"
+                                                                required={true}
+                                                                value={input.department}
+                                                                type="text"
+                                                                placeholder="Enter your department"
+                                                                anyMessage={serverMessage}
+                                                            />
+                                                        </div>
+
+                                                        <div className="col-sm-2 col-12">
+                                                            <InputField
+                                                                label="Start Date"
+                                                                eventHandel={e => experianceItemManage(index, event)}
+                                                                name="start_date"
+                                                                // help="Your current profession"
+                                                                required={true}
+                                                                value={input.start_date}
+                                                                type="date"
+                                                                placeholder="Enter your start date"
+                                                                anyMessage={serverMessage}
+                                                            />
+                                                        </div>
+
+                                                        <div className="col-sm-3 col-12">
+                                                            <InputField
+                                                                label="End Date"
+                                                                eventHandel={e => experianceItemManage(index, event)}
+                                                                name="end_date"
+                                                                // help="Your current profession"
+                                                                required={true}
+                                                                value={input.end_date}
+                                                                type="date"
+                                                                placeholder="Enter your end date"
+                                                                anyMessage={serverMessage}
+                                                            />
+                                                            {/* <Checkbox
+                                                                checked={false}
+                                                                onChangeEvent={e => experianceCurrent(index, event)}
+                                                                value={false}
+                                                                label="Running Job?"
+                                                                // help="please seletct"
+                                                                required={true}
+                                                                name="current"
+                                                                anyMessage={serverMessage}
+                                                            /> */}
+
+                                                        </div>
+
+                                                        <div className="col-md-1 col-12" style={{ marginTop: '32px' }}>
+                                                            {index !== 0 ?
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-danger"
+                                                                    onClick={() => removeExperianceFields(index)}
+                                                                >
+                                                                    <i className="fa fa-minus"></i>
+                                                                </button>
+                                                                : ''}
+                                                            {index === 0 ?
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-success"
+                                                                    onClick={addNewExperiance}
+                                                                >
+                                                                    <i className="fa fa-plus"></i>
+                                                                </button>
+                                                                : ''}
+                                                        </div>
+                                                    </div>
+                                                )
+                                            })}
 
 
                                         </> : ''}
@@ -445,7 +670,7 @@ export default function From() {
                                         <CustomButton
                                             type="submit"
                                             classes="btn btn-success btn float-right"
-                                            title="Register"
+                                            title="Profile Update"
                                         />
                                         {/* <button type="submit" className="btn btn-primary">Submit</button> */}
                                     </div>

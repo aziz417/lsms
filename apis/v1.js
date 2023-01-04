@@ -18,6 +18,10 @@ export default {
       return axios.post(`/profile/update`, fromData)
    },
 
+   async passwordChange(fromData){
+      return axios.post(`/password/change`, fromData)
+   },
+
    async adminRegister(fromData) {
       return axios.post(`/register`, fromData)
    },
@@ -29,6 +33,9 @@ export default {
    // admins
    async admins() {
       return axios.get(`/admins`)
+   },
+   async adminConsultants() {
+      return axios.get(`/admin/consultants`)
    },
 
    async deleteItems(endPoint, ids) {
