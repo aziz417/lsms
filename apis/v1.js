@@ -13,6 +13,14 @@ export default {
       const id = localStorage.getItem('auth_user_id')
       return axios.get(`/profile/${id}`)
    },
+   
+   async profileExperianceDelete(id) {
+      return axios.delete(`/profile/experience/${id}/delete`)
+   },
+   
+   async profileAcademicDelete(id) {
+      return axios.delete(`/profile/academic_qualification/${id}/delete`)
+   },
 
    async profileUpdate(fromData){
       return axios.post(`/profile/update`, fromData)

@@ -1,8 +1,11 @@
-import { capitalizeFirst, convertToSlug, ucFirst } from "../../halpers/helper"
+import { capitalizeFirst, convertToSlug, public_path, ucFirst } from "../../halpers/helper"
 import React, { useEffect, useState } from "react";
 
 export default function ImageUpload(props) {
-    const previewImageLink = 'https://t3.ftcdn.net/jpg/01/17/72/36/360_F_117723612_z7zQmUrrpG4IRGQLvgX5nwtwC18ke3qU.jpg'
+    let previewImageLink = 'https://t3.ftcdn.net/jpg/01/17/72/36/360_F_117723612_z7zQmUrrpG4IRGQLvgX5nwtwC18ke3qU.jpg'
+
+    props.oldImage != null ? previewImageLink = public_path()+props.oldImage : '';
+    // console.log(public_path());
 
     const [image, setImage] = useState(null)
     const [imageSizeMaxWarning, setImageSizeMaxWarning] = useState(null);

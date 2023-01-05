@@ -4,6 +4,9 @@ import CustomButton from "../../components/Buttons/CustomButton.js";
 import CustomLink from "../../components/Buttons/CustomLink.js";
 import Admin from "../../layouts/Admin.js";
 import api from "../../apis/v1.js"
+import { public_path, default_image, ucFirst } from "../../halpers/helper.js";
+import Image from 'next/image'
+
 
 export default function Index() {
 
@@ -11,13 +14,13 @@ export default function Index() {
     useEffect(() => {
         const me = async () => {
             const { data } = await api.profileApi();
-            setProfile(pre => data.data)
+            setProfile(pre => data?.data)
         }
 
         me();
 
     }, [])
-
+    console.log(profile.profile_image);
     return <>
         <div className="content-wrapper">
             <div className="container emp-profile">
@@ -25,20 +28,16 @@ export default function Index() {
                     <div className="row">
                         <div className="col-md-4">
                             <div className="profile-img">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog" alt="profile image" />
-                                {/* <div className="file btn btn-lg btn-primary">
-                                    Change Photo
-                                    <input type="file" name="file" />
-                                </div> */}
+                                <img style={{ height: '200px' }} src={public_path() + profile.profile_image} alt="..." className="img-thumbnail image-with-100x100" />
                             </div>
                         </div>
                         <div className="col-md-6">
                             <div className="profile-head">
                                 <h5>
-                                    Kshiti Ghelani
+                                    {profile?.name}
                                 </h5>
                                 <h6>
-                                    Web Developer and Designer
+                                    {ucFirst(profile?.type)}
                                 </h6>
                                 <div className="d-flex justify-content-start align-items-center">
                                     <h5 className="">
@@ -66,7 +65,10 @@ export default function Index() {
                                         <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
                                     </li>
                                     <li className="nav-item">
-                                        <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Timeline</a>
+                                        <a className="nav-link" id="experiance-tab" data-toggle="tab" href="#experiance" role="tab" aria-controls="profile" aria-selected="false">Experiance</a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a className="nav-link" id="academic-tab" data-toggle="tab" href="#academic" role="tab" aria-controls="profile" aria-selected="false">Academic</a>
                                     </li>
                                 </ul>
                             </div>
@@ -98,7 +100,7 @@ export default function Index() {
                                 <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <label>User Id</label>
+                                            <label>Id</label>
                                         </div>
                                         <div className="col-md-6">
                                             <p>Kshiti123</p>
@@ -109,7 +111,7 @@ export default function Index() {
                                             <label>Name</label>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>Kshiti Ghelani</p>
+                                            <p>{ucFirst(profile?.name)}</p>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -117,7 +119,7 @@ export default function Index() {
                                             <label>Email</label>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>kshitighelani@gmail.com</p>
+                                            <p>{profile?.email}</p>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -125,19 +127,43 @@ export default function Index() {
                                             <label>Phone</label>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>123 456 7890</p>
+                                            <p>{profile?.phone}</p>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <label>Profession</label>
+                                            <label>Designation</label>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>Web Developer and Designer</p>
+                                            <p>{ucFirst(profile?.type)}</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <div className="tab-pane fade" id="experiance" role="tabpanel" aria-labelledby="profile-tab">
+                                    <div className="row bg-success p-1">
+                                        <div className="col-4 table-secondary">Institute</div>
+                                        <div className="col-3 table-secondary">Designation</div>
+                                        <div className="col-3 table-secondary">Department</div>
+                                        <div className="col-1 table-secondary text-xs">Start D.</div>
+                                        <div className="col-1 table-secondary text-xs">End D.</div>
+                                    </div>
+                                    <div className="dropdown-divider my-1" />
+                                    {profile?.experiances?.map((experiance) => {return <>
+                                        <div className="row text-xs p-1">
+                                        <div className="col-4 table-secondary">{ucFirst(experiance.institute_name)}</div>
+                                        <div className="col-3 table-secondary">{ucFirst(experiance.designation)}</div>
+                                        <div className="col-3 table-secondary">{ucFirst(experiance.department)}</div>
+                                        <div className="col-1 table-secondary">{experiance.start_date}</div>
+                                        <div className="col-1 table-secondary">{experiance.end_date}</div>
+                                    </div>
+                                    <div className="dropdown-divider my-1" />
+                                    </>})}
+                                    
+
+
+                                </div>
+
+                                <div className="tab-pane fade" id="academic" role="tabpanel" aria-labelledby="profile-tab">
                                     <div className="row">
                                         <div className="col-md-6">
                                             <label>Experience</label>

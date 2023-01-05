@@ -66,6 +66,12 @@ export const getBase64 = (file) => {
             resolve(baseURL);
         };
     });
+}
 
+export const public_path = () => {
+    return process.env.NEXT_PUBLIC_ENV_PUBLIC_PATH
+}
 
+export const default_image = () => {
+    return process.env.NEXT_PUBLIC_ENV_DEFAULT_IMAGE
 }

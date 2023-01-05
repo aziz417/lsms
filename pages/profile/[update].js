@@ -34,7 +34,7 @@ export default function From() {
         current: ''
     }]);
 
-    const [accademicItems, setAccademicItems] = useState([{
+    const [academicItems, setAcademicItems] = useState([{
         education_level: '',
         institute_name: '',
         passing_year: '',
@@ -42,6 +42,8 @@ export default function From() {
     }]);
 
     const [serverMessage, setServerMessage] = useState(false);
+    const [updated, setUpdated] = useState(false);
+
 
     const router = useRouter()
 
@@ -49,14 +51,18 @@ export default function From() {
         const me = async () => {
             const { data } = await api.profileApi();
             setFromInputs(pre => data?.data)
-            // if (data?.data?.type !== 'citizen') {
-            //     setExperianceItems(pre => data?.data?.experiances)
-            //     setAccademicItems(pre => data?.data?.accademics)
-            // }
+            if (data?.data?.type !== 'citizen') {
+                if (data?.data?.experiances.length > 0) {
+                    setExperianceItems(pre => data?.data?.experiances)
+                }
+                if (data?.data?.academics.length > 0) {
+                    setAcademicItems(pre => data?.data?.academics)
+                }
+            }
         }
 
         me();
-    }, [])
+    }, [updated])
 
 
     const options = [
@@ -135,32 +141,51 @@ export default function From() {
             education_level: '',
             institute_name: '',
             passing_year: '',
-            caertificate: ''
+            certification_copy: ''
         }
-        setAccademicItems([...accademicItems, newObject])
+        setAcademicItems([...academicItems, newObject])
     }
 
-    const accademicItemManage = (index, event) => {
-        let data = [...accademicItems];
+    const academicItemManage = (index, event) => {
+        let data = [...academicItems];
         data[index][event.target.name] = event.target.value;
-        setAccademicItems(data);
+        setAcademicItems(data);
     }
 
-    const removeAccademicFields = (index) => {
-        let data = [...accademicItems];
+    const removeAccademicFields = (index, item) => {
+        let data = [...academicItems];
         data.splice(index, 1)
-        setAccademicItems(data)
+        setAcademicItems(data)
+
+        if(item.id){
+            const academicDelete = async (id) => {
+                try {
+                    const { data } = await api.profileAcademicDelete(id);
+        
+                    if (data.status_code === 200 || data.status_code === 201) {
+                        toast.success(ucFirst(data?.message))
+                    } else {
+                        toast.warning(data?.message)
+                    }
+        
+                } catch (e) {
+                    setServerMessage(e.response?.data?.errors)
+                }
+            } 
+
+            academicDelete(item.id)
+        }
     }
 
     const caertificateImage = (index, e) => {
-        let data = [...accademicItems];
+        let data = [...academicItems];
         // data[index][event.target.name] = event.target.files[0];
-        // setAccademicItems(data);
+        // setAcademicItems(data);
 
         getBase64(e.target.files[0])
             .then(result => {
                 data[index][e.target.name] = result;
-                setAccademicItems(data);
+                setAcademicItems(data);
                 // data[index][event.target.name] = event.target.files[0];
             })
             .catch(err => {
@@ -193,10 +218,29 @@ export default function From() {
     //     setExperianceItems(data);
     // }
 
-    const removeExperianceFields = (index) => {
+    const removeExperianceFields = (index, item) => {
         let data = [...experianceItems];
         data.splice(index, 1)
         setExperianceItems(data)
+
+        if(item.id){
+            const experianceDelete = async (id) => {
+                try {
+                    const { data } = await api.profileExperianceDelete(id);
+        
+                    if (data.status_code === 200 || data.status_code === 201) {
+                        toast.success(ucFirst(data?.message))
+                    } else {
+                        toast.warning(data?.message)
+                    }
+        
+                } catch (e) {
+                    setServerMessage(e.response?.data?.errors)
+                }
+            } 
+
+            experianceDelete(item.id)
+        }
     }
 
     const fromData = (e) => {
@@ -211,7 +255,7 @@ export default function From() {
         e.preventDefault();
 
         if (fromInputs.type !== 'citizen') {
-            Object.assign(fromInputs, { accademics: accademicItems })
+            Object.assign(fromInputs, { academics: academicItems })
             Object.assign(fromInputs, { experiances: experianceItems })
         }
         console.log(fromInputs, 'beforeapicall');
@@ -223,7 +267,7 @@ export default function From() {
             if (data.status_code === 200 || data.status_code === 201) {
                 toast.success(ucFirst(data?.message))
                 setServerMessage(false)
-
+                setUpdated(pre => !updated)
                 // Object.keys(fromInputs)?.map((name) => {
                 //     setFromInputs(prevState => ({
                 //         ...prevState,
@@ -239,6 +283,8 @@ export default function From() {
             setServerMessage(e.response?.data?.errors)
         }
     }
+
+    console.log(fromInputs);
 
     return (
 
@@ -354,6 +400,7 @@ export default function From() {
                                                     eventHandel={selectEvent}
                                                     lavel="Select Gender"
                                                     options={options}
+                                                    selectedOption={fromData.gender}
                                                     required={true}
                                                     id="profileGender"
                                                     help="select gender"
@@ -368,8 +415,9 @@ export default function From() {
                                                     accept=".jpg, .jpeg, .png"
                                                     help="Set as a profile image"
                                                     size="2"
+                                                    oldImage={fromInputs?.profile_image ?? null}
                                                     onChangeHandel={profileUpload}
-                                                    required={true}
+                                                    required={fromInputs?.profile_image ? false : true}
                                                     anyMessage={serverMessage}
                                                 />
                                             </div>
@@ -395,7 +443,7 @@ export default function From() {
                                                     // value={fromInputs?.status == '1' ? true : false}
                                                     label="status"
                                                     help="please seletct"
-                                                    required={true}
+                                                    required={false}
                                                     name="status"
                                                     anyMessage={serverMessage}
                                                 />
@@ -410,8 +458,9 @@ export default function From() {
                                                         accept=".jpg, .jpeg, .png"
                                                         help="Set as a your nid front image"
                                                         size="2"
+                                                        oldImage={fromInputs?.nid_front ?? null}
                                                         onChangeHandel={nidFrontUpload}
-                                                        required={true}
+                                                        required={fromInputs?.nid_front ? false : true}
                                                         anyMessage={serverMessage}
                                                     />
                                                 </div>
@@ -423,8 +472,9 @@ export default function From() {
                                                         accept=".jpg, .jpeg, .png"
                                                         help="Set as a your nid back image"
                                                         size="2"
+                                                        required={fromInputs?.nid_back ? false : true}
+                                                        oldImage={fromInputs?.nid_back ?? null}
                                                         onChangeHandel={nidBackUpload}
-                                                        required={true}
                                                         anyMessage={serverMessage}
                                                     />
                                                 </div>
@@ -450,13 +500,13 @@ export default function From() {
                                             <div className="dropdown-divider my-4" />
                                             <h5>Academic Information: </h5>
 
-                                            {accademicItems?.map((input, index) => {
+                                            {academicItems?.map((input, index) => {
                                                 return (
                                                     <div className="row" key={index}>
                                                         <div className="col-sm-2 col-12">
                                                             <InputField
                                                                 label="Education Level"
-                                                                eventHandel={e => accademicItemManage(index, event)}
+                                                                eventHandel={e => academicItemManage(index, event)}
                                                                 name="education_level"
                                                                 // help="Your current profession"
                                                                 required={true}
@@ -470,7 +520,7 @@ export default function From() {
                                                         <div className="col-sm-2 col-12">
                                                             <InputField
                                                                 label="Institute Name"
-                                                                eventHandel={e => accademicItemManage(index, event)}
+                                                                eventHandel={e => academicItemManage(index, event)}
                                                                 name="institute_name"
                                                                 // help="Your current profession"
                                                                 required={true}
@@ -484,7 +534,7 @@ export default function From() {
                                                         <div className="col-sm-2 col-12">
                                                             <InputField
                                                                 label="Passing Year"
-                                                                eventHandel={e => accademicItemManage(index, event)}
+                                                                eventHandel={e => academicItemManage(index, event)}
                                                                 name="passing_year"
                                                                 // help="Your current profession"
                                                                 required={true}
@@ -498,12 +548,13 @@ export default function From() {
                                                         <div className="col-md-4 col-12">
                                                             <ImageUpload
                                                                 label="Certificate"
-                                                                name="caertificate"
+                                                                name="certification_copy"
                                                                 accept=".jpg, .jpeg, .png"
                                                                 // help="Set as a your nid front image"
                                                                 size="2"
+                                                                oldImage={academicItems[index].certification_copy ?? null }
                                                                 onChangeHandel={e => caertificateImage(index, e)}
-                                                                required={true}
+                                                                required={academicItems[index].certification_copy ? false : true}
                                                                 anyMessage={serverMessage}
                                                             />
                                                         </div>
@@ -513,7 +564,7 @@ export default function From() {
                                                                 <button
                                                                     type="button"
                                                                     className="btn btn-danger"
-                                                                    onClick={() => removeAccademicFields(index)}
+                                                                    onClick={() => removeAccademicFields(index, input)}
                                                                 >
                                                                     <i className="fa fa-minus"></i>
                                                                 </button>
@@ -642,7 +693,7 @@ export default function From() {
                                                                 <button
                                                                     type="button"
                                                                     className="btn btn-danger"
-                                                                    onClick={() => removeExperianceFields(index)}
+                                                                    onClick={() => removeExperianceFields(index, input)}
                                                                 >
                                                                     <i className="fa fa-minus"></i>
                                                                 </button>
