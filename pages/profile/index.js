@@ -6,6 +6,7 @@ import Admin from "../../layouts/Admin.js";
 import api from "../../apis/v1.js"
 import { public_path, default_image, ucFirst } from "../../halpers/helper.js";
 import Image from 'next/image'
+import axios from "axios"
 
 
 export default function Index() {
@@ -13,17 +14,26 @@ export default function Index() {
     const [profile, setProfile] = useState([]);
     useEffect(() => {
         const me = async () => {
+            // const TOKEN = localStorage.getItem('token')
+
+            // axios.defaults.headers.post['Authorization'] = `Bearer ${TOKEN}`;
+
+            // axios.defaults.baseURL = 'http://localhost:1010/'
+            // axios.defaults.headers.common = { 'Authorization': `bearer ${TOKEN}` }
+            
+
             const { data } = await api.profileApi();
+            console.log(data);
             setProfile(pre => data?.data)
         }
 
         me();
 
     }, [])
-    console.log(profile.profile_image);
+    // console.log(profile.profile_image);
     return <>
         <div className="content-wrapper">
-            <div className="container emp-profile">
+            {/* <div className="container emp-profile">
                 <form method="post">
                     <div className="row">
                         <div className="col-md-4">
@@ -148,17 +158,19 @@ export default function Index() {
                                         <div className="col-1 table-secondary text-xs">End D.</div>
                                     </div>
                                     <div className="dropdown-divider my-1" />
-                                    {profile?.experiances?.map((experiance) => {return <>
-                                        <div className="row text-xs p-1">
-                                        <div className="col-4 table-secondary">{ucFirst(experiance.institute_name)}</div>
-                                        <div className="col-3 table-secondary">{ucFirst(experiance.designation)}</div>
-                                        <div className="col-3 table-secondary">{ucFirst(experiance.department)}</div>
-                                        <div className="col-1 table-secondary">{experiance.start_date}</div>
-                                        <div className="col-1 table-secondary">{experiance.end_date}</div>
-                                    </div>
-                                    <div className="dropdown-divider my-1" />
-                                    </>})}
-                                    
+                                    {profile?.experiances?.map((experiance) => {
+                                        return <>
+                                            <div className="row text-xs p-1">
+                                                <div className="col-4 table-secondary">{ucFirst(experiance.institute_name)}</div>
+                                                <div className="col-3 table-secondary">{ucFirst(experiance.designation)}</div>
+                                                <div className="col-3 table-secondary">{ucFirst(experiance.department)}</div>
+                                                <div className="col-1 table-secondary">{experiance.start_date}</div>
+                                                <div className="col-1 table-secondary">{experiance.end_date}</div>
+                                            </div>
+                                            <div className="dropdown-divider my-1" />
+                                        </>
+                                    })}
+
 
 
                                 </div>
@@ -215,7 +227,7 @@ export default function Index() {
                         </div>
                     </div>
                 </form>
-            </div>
+            </div> */}
         </div >
     </>
 }

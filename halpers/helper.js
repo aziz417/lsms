@@ -75,3 +75,14 @@ export const public_path = () => {
 export const default_image = () => {
     return process.env.NEXT_PUBLIC_ENV_DEFAULT_IMAGE
 }
+
+export const bd_mobile_number_validation = (number) => {
+    let pattern = /(^(\+88|0088)?(01){1}[3456789]{1}(\d){8})$/
+    return pattern.test(number)
+}
+
+export const email_validation = (email) => {
+    
+    let pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return pattern.test(email)
+}

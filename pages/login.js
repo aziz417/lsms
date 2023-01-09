@@ -6,6 +6,7 @@ import { useState } from 'react';
 import api from '../apis/v1'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify';
+import { bd_mobile_number_validation, email_validation } from "../halpers/helper.js";
 
 
 export default function Login() {
@@ -26,25 +27,37 @@ export default function Login() {
     const fromSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-            const { data } = await api.login(fromInputs);
-            if (data.status_code == 200) {
-                localStorage.setItem("token", data?.data?.access_token)
-                localStorage.setItem("auth_user_id", data.data.user.id)
+        const isValidPhone = bd_mobile_number_validation(fromInputs.email_or_phone)
+        const isValidEmail = email_validation(fromInputs.email_or_phone)
 
-                toast.success(data?.message)
-                // router.push('/')
-            } else {
-                toast.warning(data?.message)
+        if (isValidPhone || isValidEmail) {
+            setServerMessage(false)
+            // console.log(isValidEmail);
+            try {
 
+                const { data } = await api.login(fromInputs);
+
+                console.log(data);
+                if (data.status_code == 200) {
+                    // console.log(data);
+                    localStorage.setItem("token", data?.access_token)
+                    toast.success(data?.message)
+                    router.push('/')
+                } else {
+                    toast.warning(data?.message)
+
+                }
+
+
+            } catch (e) {
+                setServerMessage(e.response?.data?.errors)
             }
+        } else {
 
-
-        } catch (e) {
-            setServerMessage(e.response?.data?.errors)
         }
-
     }
+
+    // console.log(serverMessage);
 
     return (
         <>

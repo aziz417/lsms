@@ -13,9 +13,9 @@ export default function Header() {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        // if (!token || token === 'null') {
-        //     router.push('/login')
-        // }
+        if (!token) {
+            router.push('/login')
+        }
     }, [])
 
     const logout = async (e) => {
@@ -25,13 +25,13 @@ export default function Header() {
             const { data } = await api.logout();
 
             if (data.status_code === 200) {
-                localStorage.setItem("token", null)
+                localStorage.removeItem("token")
                 toast.success(data?.message)
                 router.push('/login')
             }
 
         } catch (e) {
-            console.log(e);
+            console.log(e, 'dfsgjdhg');
             // if (e.response?.data?.status === 401) {
             //   warningMessage(e.response?.data?.error)
             // }

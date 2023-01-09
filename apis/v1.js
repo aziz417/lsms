@@ -9,24 +9,23 @@ export default {
       return axios.post(`/login`, fromData)
    },
 
-   async profileApi(){
-      const id = localStorage.getItem('auth_user_id')
-      return axios.get(`/profile/${id}`)
+   async profileApi() {
+      return axios.get(`/profile`)
    },
-   
+
    async profileExperianceDelete(id) {
       return axios.delete(`/profile/experience/${id}/delete`)
    },
-   
+
    async profileAcademicDelete(id) {
       return axios.delete(`/profile/academic_qualification/${id}/delete`)
    },
 
-   async profileUpdate(fromData){
+   async profileUpdate(fromData) {
       return axios.post(`/profile/update`, fromData)
    },
 
-   async passwordChange(fromData){
+   async passwordChange(fromData) {
       return axios.post(`/password/change`, fromData)
    },
 

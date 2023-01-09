@@ -27,7 +27,7 @@ export default function DataList(props) {
         const searchResult = props.data.filter((item) => {
             const search_columns = Object.keys(search_and_hide_columns)
             for (let i = 0; i < search_columns.length; i++) {
-                if (search_and_hide_columns[search_columns[i]]['search'] === true) {
+                if (search_and_hide_columns[search_columns[i]]['search'] === true && item[search_columns[i]]) {
                     if (item[search_columns[i]].toString().toLowerCase().match(search?.toLowerCase())) {
                         return item;
                         break
