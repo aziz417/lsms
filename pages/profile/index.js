@@ -7,11 +7,13 @@ import api from "../../apis/v1.js"
 import { public_path, default_image, ucFirst } from "../../halpers/helper.js";
 import Image from 'next/image'
 import axios from "axios"
+import { useSelector, useDispatch } from "react-redux";
 
 
 export default function Index() {
 
     const [profile, setProfile] = useState([]);
+    const [role, setRole] = useState([]);
     useEffect(() => {
         const me = async () => {
             // const TOKEN = localStorage.getItem('token')
@@ -20,23 +22,34 @@ export default function Index() {
 
             // axios.defaults.baseURL = 'http://localhost:1010/'
             // axios.defaults.headers.common = { 'Authorization': `bearer ${TOKEN}` }
-            
+
 
             const { data } = await api.profileApi();
-            console.log(data);
-            setProfile(pre => data?.data)
+
+            setProfile(pre => data?.data?.user)
+            setRole(pre => data?.data?.role[0])
         }
 
         me();
 
     }, [])
+
+    const icon = useSelector(state => state.icon)
+    const dispatch = useDispatch();
+
+    const changeD = () => {
+        dispatch({type: 'sun'})
+    }
+
+    console.log(icon);
     // console.log(profile.profile_image);
     return <>
         <div className="content-wrapper">
-            {/* <div className="container emp-profile">
+            <div className="container emp-profile">
                 <form method="post">
                     <div className="row">
                         <div className="col-md-4">
+                            <button type="button" className="btn btn-success" onClick={changeD}>rtyiuryter</button>
                             <div className="profile-img">
                                 <img style={{ height: '200px' }} src={public_path() + profile.profile_image} alt="..." className="img-thumbnail image-with-100x100" />
                             </div>
@@ -84,10 +97,17 @@ export default function Index() {
                             </div>
                         </div>
                         <div className="col-md-2">
-                            <CustomLink
-                                classes="float-right btn-sm btn-success"
-                                title="Update Profile"
+                            {role === 'admin' ? <CustomLink
+                                classes="float-right btn-sm btn-warning"
+                                title="Approval"
                                 url={`/profile/update-` + `${profile?.id}`} />
+                                :
+                                <CustomLink
+                                    classes="float-right btn-sm btn-success"
+                                    title="Update Profile"
+                                    url={`/profile/update-` + `${profile?.id}`} />
+                            }
+
                         </div>
                     </div>
                     <div className="row">
@@ -110,10 +130,10 @@ export default function Index() {
                                 <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <label>Id</label>
+                                            <label>Code</label>
                                         </div>
                                         <div className="col-md-6">
-                                            <p>Kshiti123</p>
+                                            <p>{profile?.code}</p>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -151,83 +171,54 @@ export default function Index() {
                                 </div>
                                 <div className="tab-pane fade" id="experiance" role="tabpanel" aria-labelledby="profile-tab">
                                     <div className="row bg-success p-1">
-                                        <div className="col-4 table-secondary">Institute</div>
-                                        <div className="col-3 table-secondary">Designation</div>
-                                        <div className="col-3 table-secondary">Department</div>
-                                        <div className="col-1 table-secondary text-xs">Start D.</div>
-                                        <div className="col-1 table-secondary text-xs">End D.</div>
+                                        <div className="col-4">Institute</div>
+                                        <div className="col-3">Designation</div>
+                                        <div className="col-3">Department</div>
+                                        <div className="col-1 text-xs">Start D.</div>
+                                        <div className="col-1 text-xs">End D.</div>
                                     </div>
                                     <div className="dropdown-divider my-1" />
                                     {profile?.experiances?.map((experiance) => {
                                         return <>
-                                            <div className="row text-xs p-1">
-                                                <div className="col-4 table-secondary">{ucFirst(experiance.institute_name)}</div>
-                                                <div className="col-3 table-secondary">{ucFirst(experiance.designation)}</div>
-                                                <div className="col-3 table-secondary">{ucFirst(experiance.department)}</div>
-                                                <div className="col-1 table-secondary">{experiance.start_date}</div>
-                                                <div className="col-1 table-secondary">{experiance.end_date}</div>
+                                            <div className="row text-xs p-1 d-flex justify-content-center align-items-center">
+                                                <div className="col-4 table-secondary py-2 px-1">{ucFirst(experiance.institute_name)}</div>
+                                                <div className="col-3 table-secondary py-2 px-1">{ucFirst(experiance.designation)}</div>
+                                                <div className="col-3 table-secondary py-2 px-1">{ucFirst(experiance.department)}</div>
+                                                <div className="col-1 table-secondary" style={{ fontSize: '10px', padding: '10px 0px 9px 0px' }}>{experiance.start_date}</div>
+                                                <div className="col-1 table-secondary" style={{ fontSize: '10px', padding: '10px 0px 9px 0px' }}>{experiance.end_date}</div>
                                             </div>
                                             <div className="dropdown-divider my-1" />
                                         </>
                                     })}
-
-
-
                                 </div>
 
                                 <div className="tab-pane fade" id="academic" role="tabpanel" aria-labelledby="profile-tab">
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <label>Experience</label>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <p>Expert</p>
-                                        </div>
+                                    <div className="row bg-success p-1">
+                                        <div className="col-3">Education Level</div>
+                                        <div className="col-3">Institute Name</div>
+                                        <div className="col-3">Passing Year</div>
+                                        <div className="col-3">Certificate Copy</div>
                                     </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <label>Hourly Rate</label>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <p>10$/hr</p>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <label>Total Projects</label>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <p>230</p>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <label>English Level</label>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <p>Expert</p>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <label>Availability</label>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <p>6 months</p>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <label>Your Bio</label><br />
-                                            <p>Your detail description</p>
-                                        </div>
-                                    </div>
+                                    <div className="dropdown-divider my-1" />
+                                    {profile?.academics?.map((academic) => {
+                                        return <>
+                                            <div className="row text-xs p-1 d-flex justify-content-center align-items-center">
+                                                <div className="col-3 table-secondary py-2 px-1">{ucFirst(academic.education_level)}</div>
+                                                <div className="col-3 table-secondary py-2 px-1">{ucFirst(academic.institute_name)}</div>
+                                                <div className="col-3 table-secondary py-2 px-1">{ucFirst(academic.passing_year)}</div>
+                                                <div className="col-3">
+                                                    <img  src={public_path() + academic.certification_copy} alt="..." className="img-thumbnail image-with-100x100" />
+                                                </div>
+                                            </div>
+                                            <div className="dropdown-divider my-1" />
+                                        </>
+                                    })}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </form>
-            </div> */}
+            </div>
         </div >
     </>
 }

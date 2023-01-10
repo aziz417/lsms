@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import CustomButton from "../../components/Buttons/CustomButton.js";
 import { useRouter } from 'next/router'
+import MultipleImageUpload from "../../components/FormControl/MultipleImageUpload.js";
+import MyUploader from "../../components/FormControl/MyUploader.js";
 
 export default function From() {
     const [fromInputs, setFromInputs] = useState({ password: '', phone: "", name: '' });
@@ -18,6 +20,12 @@ export default function From() {
             ...prevState,
             [name]: value
         }));
+    }
+
+    const multipleProfileUpload = (e) => {
+        console.log(e);
+        // console.log(e.target.checked);
+        // console.log(e.target.value);
     }
 
     const fromSubmit = async (e) => {
@@ -101,10 +109,26 @@ export default function From() {
                                             anyMessage={serverMessage}
                                         />
 
+                                        {/* <MultipleImageUpload
+                                            label="User Images"
+                                            name="userImages"
+                                            accept=".jpg, .jpeg, .png"
+                                            help="user gallery image upload max 10 item "
+                                            size="1"
+                                            onChangeHandel={multipleProfileUpload}
+                                        />
+
+                                        <MyUploader
+                                            maxFiles={40}
+                                            accept="image/*"
+                                            label="gallery images upload"
+                                            maxFileSize="2000000" // 2000000 == 2mb
+                                        /> */}
 
                                     </div>
                                     {/* /.card-body */}
                                     <div className="card-footer">
+
                                         <CustomButton
                                             type="submit"
                                             classes="btn btn-success btn float-right"

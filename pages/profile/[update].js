@@ -50,20 +50,20 @@ export default function From() {
     useEffect(() => {
         const me = async () => {
             const { data } = await api.profileApi();
-            setFromInputs(pre => data?.data)
+            setFromInputs(pre => data?.data?.user)
             if (data?.data?.type !== 'citizen') {
-                if (data?.data?.experiances.length > 0) {
-                    setExperianceItems(pre => data?.data?.experiances)
+
+                if (data?.data?.user?.experiances?.length > 0) {
+                    setExperianceItems(pre => data?.data?.user?.experiances)
                 }
-                if (data?.data?.academics.length > 0) {
-                    setAcademicItems(pre => data?.data?.academics)
+                if (data?.data?.user?.academics?.length > 0) {
+                    setAcademicItems(pre => data?.data?.user?.academics)
                 }
             }
         }
 
         me();
     }, [updated])
-
 
     const options = [
         { label: 'Male', id: 'male' },
@@ -107,7 +107,7 @@ export default function From() {
                 }));
             })
             .catch(err => {
-                // console.log(err);
+                console.log(err);
             });
     }
 
@@ -189,7 +189,7 @@ export default function From() {
                 // data[index][event.target.name] = event.target.files[0];
             })
             .catch(err => {
-                // console.log(err);
+                console.log(err);
             });
     }
 
@@ -258,11 +258,9 @@ export default function From() {
             Object.assign(fromInputs, { academics: academicItems })
             Object.assign(fromInputs, { experiances: experianceItems })
         }
-        console.log(fromInputs, 'beforeapicall');
 
         try {
             const { data } = await api.profileUpdate(fromInputs);
-            console.log(data, 'afterapicall');
 
             if (data.status_code === 200 || data.status_code === 201) {
                 toast.success(ucFirst(data?.message))
@@ -283,8 +281,6 @@ export default function From() {
             setServerMessage(e.response?.data?.errors)
         }
     }
-
-    console.log(fromInputs);
 
     return (
 
