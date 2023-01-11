@@ -3,11 +3,11 @@ import axios from 'axios'
 const localUrl = 'http://127.0.0.1:8000/api/'
 const ipUrl = 'http://192.168.88.7/lcs/public/api/'
 const liveServerUrl = 'http://127.0.0.1:8000/api/'
-const testServerUrl = 'http://127.0.0.1:8000/api/'
+const testServerUrl = 'https://land-consultancy.gsmcltd.com/api/'
 
 
 let AXIOS = axios.create({
-    baseURL: ipUrl,
+    baseURL: testServerUrl,
     timeout: 10000,
     Accept: 'application/json', 
 });

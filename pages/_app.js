@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
 import { Provider } from "react-redux";
-import store from "../src/store/index";
+import store from "../src/store/store";
 
 
 export default class MyApp extends App {

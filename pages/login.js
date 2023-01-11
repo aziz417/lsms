@@ -7,11 +7,14 @@ import api from '../apis/v1'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify';
 import { bd_mobile_number_validation, email_validation } from "../halpers/helper.js";
+import { useDispatch } from "react-redux";
+import { loginAction } from "../src/redux/actions.js";
 
 
 export default function Login() {
     const [fromInputs, setFromInputs] = useState({ email_or_phone: 'az@g.com', password: '12345678' });
     const [serverMessage, setServerMessage] = useState(false);
+    const dispatch = useDispatch();
 
     const router = useRouter();
 
@@ -37,7 +40,6 @@ export default function Login() {
 
                 const { data } = await api.login(fromInputs);
 
-                console.log(data);
                 if (data.status_code == 200) {
                     // console.log(data);
                     localStorage.setItem("token", data?.access_token)

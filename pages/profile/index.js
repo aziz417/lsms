@@ -16,13 +16,6 @@ export default function Index() {
     const [role, setRole] = useState([]);
     useEffect(() => {
         const me = async () => {
-            // const TOKEN = localStorage.getItem('token')
-
-            // axios.defaults.headers.post['Authorization'] = `Bearer ${TOKEN}`;
-
-            // axios.defaults.baseURL = 'http://localhost:1010/'
-            // axios.defaults.headers.common = { 'Authorization': `bearer ${TOKEN}` }
-
 
             const { data } = await api.profileApi();
 
@@ -41,17 +34,17 @@ export default function Index() {
         dispatch({type: 'sun'})
     }
 
-    console.log(icon);
+
     // console.log(profile.profile_image);
     return <>
         <div className="content-wrapper">
             <div className="container emp-profile">
-                <form method="post">
+                <form method="post">,
                     <div className="row">
                         <div className="col-md-4">
                             <button type="button" className="btn btn-success" onClick={changeD}>rtyiuryter</button>
                             <div className="profile-img">
-                                <img style={{ height: '200px' }} src={public_path() + profile.profile_image} alt="..." className="img-thumbnail image-with-100x100" />
+                                <img style={{ height: '200px' }} src={profile.profile_image ? public_path() + profile.profile_image : ''} alt="..." className="img-thumbnail image-with-100x100" />
                             </div>
                         </div>
                         <div className="col-md-6">
@@ -178,17 +171,17 @@ export default function Index() {
                                         <div className="col-1 text-xs">End D.</div>
                                     </div>
                                     <div className="dropdown-divider my-1" />
-                                    {profile?.experiances?.map((experiance) => {
-                                        return <>
-                                            <div className="row text-xs p-1 d-flex justify-content-center align-items-center">
+                                    {profile?.experiances?.map((experiance, index) => {
+                                        return (
+                                            <div key={index} className="row text-xs p-1 d-flex justify-content-center align-items-center">
                                                 <div className="col-4 table-secondary py-2 px-1">{ucFirst(experiance.institute_name)}</div>
                                                 <div className="col-3 table-secondary py-2 px-1">{ucFirst(experiance.designation)}</div>
                                                 <div className="col-3 table-secondary py-2 px-1">{ucFirst(experiance.department)}</div>
                                                 <div className="col-1 table-secondary" style={{ fontSize: '10px', padding: '10px 0px 9px 0px' }}>{experiance.start_date}</div>
                                                 <div className="col-1 table-secondary" style={{ fontSize: '10px', padding: '10px 0px 9px 0px' }}>{experiance.end_date}</div>
+                                                <div className="dropdown-divider my-1" />
                                             </div>
-                                            <div className="dropdown-divider my-1" />
-                                        </>
+                                        )
                                     })}
                                 </div>
 
@@ -200,18 +193,19 @@ export default function Index() {
                                         <div className="col-3">Certificate Copy</div>
                                     </div>
                                     <div className="dropdown-divider my-1" />
-                                    {profile?.academics?.map((academic) => {
-                                        return <>
-                                            <div className="row text-xs p-1 d-flex justify-content-center align-items-center">
+                                    {profile?.academics?.map((academic, index) => {
+                                        return (
+                                            <div key={index+"g"} className="row text-xs p-1 d-flex justify-content-center align-items-center">
                                                 <div className="col-3 table-secondary py-2 px-1">{ucFirst(academic.education_level)}</div>
                                                 <div className="col-3 table-secondary py-2 px-1">{ucFirst(academic.institute_name)}</div>
                                                 <div className="col-3 table-secondary py-2 px-1">{ucFirst(academic.passing_year)}</div>
                                                 <div className="col-3">
                                                     <img  src={public_path() + academic.certification_copy} alt="..." className="img-thumbnail image-with-100x100" />
                                                 </div>
+                                                <div className="dropdown-divider my-1" />
+
                                             </div>
-                                            <div className="dropdown-divider my-1" />
-                                        </>
+                                        )
                                     })}
                                 </div>
                             </div>
