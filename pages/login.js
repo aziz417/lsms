@@ -2,7 +2,7 @@ import Auth from "../layouts/Auth.js";
 import InputField from '../components/FormControl/InputField';
 import CustomButton from '../components/Buttons/CustomButton';
 import Link from 'next/link';
-import { useState } from 'react';
+import { use, useState } from 'react';
 import api from '../apis/v1'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify';
@@ -12,9 +12,10 @@ import { loginAction } from "../src/redux/actions.js";
 
 
 export default function Login() {
-    const [fromInputs, setFromInputs] = useState({ email_or_phone: 'az@g.com', password: '12345678' });
+    const [fromInputs, setFromInputs] = useState({ email_or_phone: 'aziz@gmail.com', password: '12345678' });
     const [serverMessage, setServerMessage] = useState(false);
     const dispatch = useDispatch();
+    const [phone, setPhone] = useState('01856547')
 
     const router = useRouter();
 
@@ -43,6 +44,7 @@ export default function Login() {
                 if (data.status_code == 200) {
                     // console.log(data);
                     localStorage.setItem("token", data?.access_token)
+                    dispatch(loginAction(phone))
                     toast.success(data?.message)
                     router.push('/')
                 } else {

@@ -1,6 +1,6 @@
 import { authSlice } from "./slice";
 
-const { action: slice } = authSlice;
+const { actions: slice } = authSlice;
 
 // login action 
 export const loginAction = (phone) => (dispatch) => {
